@@ -24,7 +24,7 @@ class: center, middle, inverse, title-slide
 
 * My name is Janith Wanniarachchi, I'm currently studying in University of Sri Jayewardenepura for my BSc. in Statistics and also I'm currently interning as a data scientist at Trabeya and working part time as a Consultant Data Analyst at Creative Hub. 
 
-* I have contributed to two R packages maintained by Dr. Thiyanga Thalagala, DSJobTracker and tsdataleaks. Both of them are still a work in progress and I'm still working on improving the performance of the packages. 
+* I have co-authored two R packages maintained by Dr. Thiyanga Thalagala, DSJobTracker and tsdataleaks. Both of them are still a work in progress and I'm still working on improving the performance of the packages. 
 
 * I have competed in several Datathons locally and have placed in Runners up and Top Finalists positions.
 
@@ -427,8 +427,8 @@ This is going to be a tough one! You sit down and sketch out how the final datas
 
 |playlist_genre | avg_energy| avg_dance| avg_instu| avg_valen|
 |:--------------|----------:|---------:|---------:|---------:|
-|some name 1    |        0.3|       0.5|       0.2|       0.3|
-|some name 2    |        0.0|       0.2|       0.8|       0.7|
+|some name 1    |        0.3|       0.0|       0.9|       0.9|
+|some name 2    |        0.3|       0.6|       1.0|       0.9|
 
 So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together
 
@@ -457,16 +457,12 @@ spotify %&gt;%
   head(4) 
 ```
 
-```
-# A tibble: 4 x 5
-# Groups:   Genre [1]
-  Genre Energetic Dance Instrumentals Upbeat
-  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;  &lt;dbl&gt;
-1 pop       0.701 0.639        0.0599  0.504
-2 pop       0.701 0.639        0.0599  0.504
-3 pop       0.701 0.639        0.0599  0.504
-4 pop       0.701 0.639        0.0599  0.504
-```
+|Genre | Energetic|     Dance| Instrumentals|   Upbeat|
+|:-----|---------:|---------:|-------------:|--------:|
+|pop   | 0.7010278| 0.6393017|     0.0598763| 0.503521|
+|pop   | 0.7010278| 0.6393017|     0.0598763| 0.503521|
+|pop   | 0.7010278| 0.6393017|     0.0598763| 0.503521|
+|pop   | 0.7010278| 0.6393017|     0.0598763| 0.503521|
 
 Wait that doesn't look right, We need only one row per genre. Do we have to call distinct again? Or is there an easier way than having to `mutate` -&gt; `select` -&gt; `distinct`?
 

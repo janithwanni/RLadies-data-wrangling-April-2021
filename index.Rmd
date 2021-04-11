@@ -16,7 +16,7 @@ output:
 
 * My name is Janith Wanniarachchi, I'm currently studying in University of Sri Jayewardenepura for my BSc. in Statistics and also I'm currently interning as a data scientist at Trabeya and working part time as a Consultant Data Analyst at Creative Hub. 
 
-* I have contributed to two R packages maintained by Dr. Thiyanga Thalagala, DSJobTracker and tsdataleaks. Both of them are still a work in progress and I'm still working on improving the performance of the packages. 
+* I have co-authored two R packages maintained by Dr. Thiyanga Thalagala, DSJobTracker and tsdataleaks. Both of them are still a work in progress and I'm still working on improving the performance of the packages. 
 
 * I have competed in several Datathons locally and have placed in Runners up and Top Finalists positions.
 
@@ -49,7 +49,6 @@ output:
 ---
 
 ```{r,echo=FALSE,warning=FALSE,message=FALSE}
-knitr::opts_chunk$set(comment = NA)
 library(tidyverse)
 spotify <- read_csv("data/spotify-songs.csv")
 ```
@@ -66,7 +65,7 @@ spotify <- read_csv("data/spotify-songs.csv")
 
 ---
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,comment=NA}
 spotify %>% glimpse(width = 70)
 ```
 
@@ -251,7 +250,7 @@ What did we learn from trying out Task No. 1?
 * She is all right with it since we worked really hard on it, but she wants to show a table of the top 5 most popular songs in the past year. The snapshot we have right now is from January 2020 but our code will be used in real time even after 2021 according to your supervisor. 
 * First we need to make a new column indicating the year that the album was released in
 
-```{r}
+```{r,comment=NA}
 spotify %>% 
   select(track_album_release_date) %>% 
   head(2) 
@@ -285,7 +284,7 @@ Before you send this out to your supervisor you want to make sure that the code 
 
 We have to mutate the column just like the Covid19 virus is mutating by modifying the existing traits. The format goes along as new_column_name = modification. The modification should give out a vector that fits the number of rows in the dataset
 
-```{r}
+```{r,comment=NA}
 spotify %>% 
   mutate(release_year = lubridate::year(as.Date(track_album_release_date))) %>% #<<
   select(release_year) %>% 
@@ -305,7 +304,7 @@ latest_year <- max(spotify_with_year$release_year,na.rm = TRUE)
 
 Simple! we use the `filter` function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &,|, ~ etc. 
 
-```{r}
+```{r,comment=NA}
 spotify_with_year %>% 
   filter(release_year == 2019) %>% #<<
   select(track_name,release_year) %>% 
@@ -388,7 +387,7 @@ We can use the `group_by` function in dplyr for this. But the `group_by` functio
 
 With that in your head you first write out the `group_by` command and decide to be adventurous and `mutate` a new column for each of the averages. 
 
-```{r}
+```{r,comment=NA,echo=TRUE,eval=FALSE}
 spotify %>% 
   group_by(playlist_genre) %>% #<<
   mutate(avg_energy = mean(energy,na.rm=TRUE),avg_dance = mean(danceability,na.rm=TRUE),
@@ -397,6 +396,16 @@ spotify %>%
          Instrumentals = avg_instu, Upbeat = avg_valen) %>% 
   select(Genre,Energetic,Dance,Instrumentals, Upbeat) %>% 
   head(4) 
+```
+```{r,comment=NA,echo=FALSE,eval=TRUE}
+spotify %>% 
+  group_by(playlist_genre) %>% #<<
+  mutate(avg_energy = mean(energy,na.rm=TRUE),avg_dance = mean(danceability,na.rm=TRUE),
+            avg_instu = mean(instrumentalness,na.rm=TRUE),avg_valen = mean(valence,na.rm=TRUE)) %>%
+  rename(Genre = playlist_genre,Energetic = avg_energy, Dance = avg_dance,
+         Instrumentals = avg_instu, Upbeat = avg_valen) %>% 
+  select(Genre,Energetic,Dance,Instrumentals, Upbeat) %>% 
+  head(4) %>% knitr::kable()
 ```
 
 Wait that doesn't look right, We need only one row per genre. Do we have to call distinct again? Or is there an easier way than having to `mutate` -> `select` -> `distinct`?
