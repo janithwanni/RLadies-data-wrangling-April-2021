@@ -49,6 +49,7 @@ output:
 ---
 
 ```{r,echo=FALSE,warning=FALSE,message=FALSE}
+knitr::opts_chunk$set(comment = NA)
 library(tidyverse)
 spotify <- read_csv("data/spotify-songs.csv")
 ```
@@ -115,17 +116,18 @@ spotify %>%
   select(track_name,track_artist,track_popularity) #<<
 ```
 
-* The select command helps us select columns that we want, and we can give a range of columns or even the columns that we don't want to have.
+* The `select` command helps us select columns that we want, and we can give a range of columns or even the columns that we don't want to have.
 
-* The select function works as follows. 
+* The `select` function works as follows. 
   + The first argument is the tibble or data frame, in this case we have piped using the pipe operator
-  + the rest of the arguments are the different ways of selecting the variables. For example if we want to select columnA from tibble t we would say select(t,A). Likewise if we want to select everything except column B from tibble t we would say select(t,-B).
+  + The rest of the arguments are the different ways of selecting the variables. 
+  + For example if we want to select columnA from tibble t we would say `select(t,A)`. Likewise if we want to select everything except column B from tibble t we would say `select(t,-B)`.
   
 ---
 
 Right now you know how to select the top rows of a tibble with the head function, so if you can get the tracks arranged by their popularity in ascending order then everything's all set!
 
-This is where the arrange function comes to play. The arrange function takes up a tibble as the first input and a set of columns to order by increasing or decreasing order. 
+This is where the `arrange` function comes to play. The `arrange` function takes up a tibble as the first input and a set of columns to order by increasing or decreasing order. 
 
 ```{r,eval=FALSE}
 spotify %>% 
@@ -142,11 +144,11 @@ spotify %>%
   knitr::kable()
 ```
 
-Wait something's not right, this isn't in descending order! We have to tell the arrange function to sort them in descending order. 
+Wait something's not right, this isn't in descending order! We have to tell the `arrange` function to sort them in descending order. 
 
 ---
 
-You can tell the arrange function to order in descending order by using a minus operator in front, somewhat similar to the select function. 
+You can tell the `arrange` function to order in descending order by using a minus operator in front, somewhat similar to the `select` function. 
 
 ```{r,eval=FALSE}
 spotify %>% 
@@ -167,13 +169,13 @@ Hold up, why is it repeating like that?
 One track can be in multiple playlists! That's why! Now what do we do?
 Let's select only the distinct or unique rows.
 
-For that we can use the distinct function. The distinct function takes in a tibble as the first argument and then a set of columns to find distinctive rows or uses all columns if no arguments are given. You can see the pattern here right?
+For that we can use the `distinct` function. The `distinct` function takes in a tibble as the first argument and then a set of columns to find distinctive rows or uses all columns if no arguments are given. You can see the pattern here right?
 
 ---
 
 ## Task No. 1 is completed!
 
-Finally by using the distinct function which returns only the unique rows in the dataframe we were able to get the top 5 track names and artists. 
+Finally by using the `distinct` function which returns only the unique rows in the dataframe we were able to get the top 5 track names and artists. 
 
 ```{r,echo=TRUE,eval=FALSE}
 spotify %>% 
@@ -203,11 +205,11 @@ Ding! Ding!
 
 There's a new message from your supervisor on Slack. She wants this to be more presentable on the user interface by renaming the columns and removing the popularity. Well we already know how to select columns that we don't need, but what about renaming columns?
 
-The rename function takes in pairs of arguments in the form of *new_name = old_name* so we can rename the columns that we want with that function. This is in addition to the first argument of a tibble to do all of these on. 
+The `rename` function takes in pairs of arguments in the form of *new_name = old_name* so we can rename the columns that we want with that function. This is in addition to the first argument of a tibble to do all of these on. 
 
 ---
 
-Using the rename function we were able to change the names of the column names as well
+Using the `rename` function we were able to change the names of the column names as well
 
 ```{r,echo=TRUE,eval=FALSE}
 spotify %>% 
@@ -236,10 +238,10 @@ spotify %>%
 ## Recap of Task No. 1
 
 What did we learn from trying out Task No. 1?
-* select function helps us select the columns that we want
-* arrange function helps us arrange the table by columns
-* rename function helps us rename columns
-* distinct functions helps us select only the unique rows in the table
+* `select` function helps us select the columns that we want
+* `arrange` function helps us arrange the table by columns
+* `rename` function helps us rename columns
+* `distinct` functions helps us select only the unique rows in the table
 
 ---
 
@@ -262,7 +264,7 @@ Uh-oh, These are in a character format and you don't know how to get the year ou
 ## lubridate can fix your dates
 
 Ding! Ding!    
-Your supervisor replied back telling you to use the function as.Date to make the column into a date and then the year function from the lubridate package. 
+Your supervisor replied back telling you to use the function `as.Date` to make the column into a date and then the `year` function from the `lubridate` package. 
 
 That was quite a lot to digest!
 
@@ -275,7 +277,7 @@ as.Date(spotify$track_album_release_date) %>% lubridate::year() #<<
 Before you send this out to your supervisor you want to make sure that the code that you wrote is correct, so you start matching with the documentation to get a rough idea about what happens. 
 
 1. You create a vector of Dates from a vector of characters
-2. You get the year as a number from the year function in lubridate
+2. You get the year as a number from the `year` function in `lubridate`
 
 ---
 
@@ -301,7 +303,7 @@ latest_year <- max(spotify_with_year$release_year,na.rm = TRUE)
 
 ## How can we filter the songs that we want?
 
-Simple! we use the filter function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &,|, ~ etc. 
+Simple! we use the `filter` function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &,|, ~ etc. 
 
 ```{r}
 spotify_with_year %>% 
@@ -345,10 +347,10 @@ spotify_with_year %>%
 
 What did we learn from trying out Task No.2 ?
 
-* as.Date function converts character columns to Date columns
-* year function from lubridate package gets the year from a Date column
-* mutate function mutates existing columns to create new ones
-* filter function helps to filter the rows based on a condition
+* `as.Date` function converts character columns to Date columns
+* `year` function from `lubridate` package gets the year from a Date column
+* `mutate` function mutates existing columns to create new ones
+* `filter` function helps to filter the rows based on a condition
 
 ---
 
@@ -377,14 +379,14 @@ So now we know what sort of outcome we expect at the end. Now the question remai
 
 ## Understanding group_by
 
-We can use the group_by function in dplyr for this. But the group_by function can be tricky sometimes so you dig a bit deeper and get the following idea. 
+We can use the `group_by` function in dplyr for this. But the `group_by` function can be tricky sometimes so you dig a bit deeper and get the following idea. 
 
-* group_by function literally groups rows with the same combination of values together
-* any mutate function that is applied will apply within the group
+* `group_by` function literally groups rows with the same combination of values together
+* any `mutate` function that is applied will apply within the group
 
 ---
 
-With that in your head you first write out the group_by command and decide to be adventurous and mutate a new column for each of the averages. 
+With that in your head you first write out the `group_by` command and decide to be adventurous and `mutate` a new column for each of the averages. 
 
 ```{r}
 spotify %>% 
@@ -397,15 +399,15 @@ spotify %>%
   head(4) 
 ```
 
-Wait that doesn't look right, We need only one row per genre. Do we have to call distinct again? Or is there an easier way than having to mutate -> select -> distinct?
+Wait that doesn't look right, We need only one row per genre. Do we have to call distinct again? Or is there an easier way than having to `mutate` -> `select` -> `distinct`?
 
 ---
 
 ## Task No. 3 is over!
 
-Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function summarize to make the code more readable and safer. 
+Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function `summarize` to make the code more readable and safer. 
 
-And now after digging on the summarize function, you realize that by simply replacing mutate with summarize your code now looks like this.
+And now after digging on the `summarize` function, you realize that by simply replacing mutate with summarize your code now looks like this.
 
 ```{r,echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE}
 spotify %>% 
@@ -434,8 +436,8 @@ spotify %>%
 
 What did we learn from trying out Task No. 3?
 
-* group_by helps to group the dataset into groups based on the values of a column
-* summarize helps to make a summary of a grouped / ungrouped dataset to get summary statistics
+* `group_by` helps to group the dataset into groups based on the values of a column
+* `summarize` helps to make a summary of a grouped / ungrouped dataset to get summary statistics
 
 ---
 
@@ -444,7 +446,7 @@ What did we learn from trying out Task No. 3?
 ## What did we learn today?
 
 * Data wrangling is kind of like meal prep where you prepare your ingredients(the raw data) for the final dish(the model or visualization)
-* There are several functions in different packages such as filter,mutate,select,arrange,group_by,summarize,distinct from the dplyr package and even date functions from the lubridate package that help to wrangle data into the format we need.
+* There are several functions in different packages such as `filter`,`mutate`,`select`,`arrange`,`group_by`,`summarize`,`distinct` from the `dplyr` package and even date functions from the lubridate package that help to wrangle data into the format we need.
 
 ## Where to go from here?
 
