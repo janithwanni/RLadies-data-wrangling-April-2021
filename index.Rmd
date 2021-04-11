@@ -1,0 +1,462 @@
+---
+title: "Data Wrangling with R"
+subtitle: "RLadies Colombo April Meetup"
+author: "Janith Wanniarachchi"
+institute: "Data Science Intern at Trabeya, <br/> Consultant Data Analyst at Creative Hub, <br/> BSc. Statistics (Hons.)(UG) University of Sri Jayewardenepura"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+# Hi there
+
+* My name is Janith Wanniarachchi, I'm currently studying in University of Sri Jayewardenepura for my BSc. in Statistics and also I'm currently interning as a data scientist at Trabeya and working part time as a Consultant Data Analyst at Creative Hub. 
+
+* I have contributed to two R packages maintained by Dr. Thiyanga Thalagala, DSJobTracker and tsdataleaks. Both of them are still a work in progress and I'm still working on improving the performance of the packages. 
+
+* I have competed in several Datathons locally and have placed in Runners up and Top Finalists positions.
+
+* That's enough about me for now, let's get right on to today's session!
+
+---
+
+# What is this data *wrangling*?
+
+* Data wrangling is where we take a raw dataset and transform it into a format that fits for different tasks
+
+* Simply it's like meal prep where we get the data ready to make the main dish (in this case it could be a model or visualization)
+
+* There are several packages that can help with data wrangling but for today we would be scratching the surface of the dplyr package in the tidyverse ecosystem.
+
+---
+
+# What are we going to do today?
+
+* I won't be teaching you a list of functions and how to use them today, instead I will be walking you through an actual scenario where these functions might be needed. 
+
+* The main outcome of this should be to have an idea about how to approach a problem and how to combine different tools that you have under your belt. 
+
+* In other news, Spotify came to Sri Lanka! Why not make a recommender system for Spotify? 
+
+* We will be using the [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md) data on Spotify from 2020-01-21.
+
+* At the end we will talk about extending this into an actual real time application.
+
+---
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+library(tidyverse)
+spotify <- read_csv("data/spotify-songs.csv")
+```
+
+## Here's the scene,
+
+* You are a new data science intern at Spotify and you are told to work on a simple csv dataset that resembles the actual dataset. 
+
+* You are given a snapshot of the dataset from 2020 to work on and your supervisor will be making the entire user interface of the recommender system. 
+
+* The supervisor will let you make the R codes locally using the dataset that was given to you and she will on the other end work on making the functions that show the plots and tables to the user. 
+
+* Usually most of your time will be spent on data wrangling hence she entrusts you to get the job done. 
+
+---
+
+```{r,echo=FALSE}
+spotify %>% glimpse(width = 70)
+```
+
+---
+
+# What are all these numbers?
+
+* The entire data dictionary was found [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md#spotify_songscsv) and you manage to jot it down as follows
+
+* We have the id,genre and subgenre of each playlist 
+
+* the id,name and release date of each album 
+
+* finally id,name,artist and popularity of each track. 
+
+* In addition we have the following features of songs.
+  + danceability : is it suitable for dancing (range: [0,1])
+  + energy : how intense and active is the song (range: [0,1])
+  + loudness : the overall loudness of track in dB (range: [-60,0])
+  + speechiness : is there a lot of speech in it? (range: [0,1])
+  + accousticness : is the song an acoustic song (range: [0,1])
+  + instrumentalness : does the song have no vocal content (range: [0,1])
+  + liveness : is there an audience in the song (range: [0,1])
+  + valence : how positive is the song
+  + key : the key of the song (CAUTION NA's means that there is no key)
+  + mode : 1 if its a major or 0 if its a minor
+  + tempo : BPM of the song
+
+---
+
+# Task No. 1 (Spot the Cool Kids)
+
+* Your supervisor has asked you to show the top 5 popular tracks and their artists.
+
+* That's quite a lot to do for the first task!
+
+* Let's break it down. 
+
+* First let's select the tracks and their artist names and how popular they are. That should work right?
+
+---
+
+## How do we *select* column names?
+
+```{r,eval=FALSE}
+spotify %>% 
+  select(track_name,track_artist,track_popularity) #<<
+```
+
+* The select command helps us select columns that we want, and we can give a range of columns or even the columns that we don't want to have.
+
+* The select function works as follows. 
+  + The first argument is the tibble or data frame, in this case we have piped using the pipe operator
+  + the rest of the arguments are the different ways of selecting the variables. For example if we want to select columnA from tibble t we would say select(t,A). Likewise if we want to select everything except column B from tibble t we would say select(t,-B).
+  
+---
+
+Right now you know how to select the top rows of a tibble with the head function, so if you can get the tracks arranged by their popularity in ascending order then everything's all set!
+
+This is where the arrange function comes to play. The arrange function takes up a tibble as the first input and a set of columns to order by increasing or decreasing order. 
+
+```{r,eval=FALSE}
+spotify %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(track_popularity) %>% #<<
+  head(5)
+```
+
+```{r,echo=FALSE,eval=TRUE}
+spotify %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(track_popularity) %>% 
+  head(5) %>% 
+  knitr::kable()
+```
+
+Wait something's not right, this isn't in descending order! We have to tell the arrange function to sort them in descending order. 
+
+---
+
+You can tell the arrange function to order in descending order by using a minus operator in front, somewhat similar to the select function. 
+
+```{r,eval=FALSE}
+spotify %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(-track_popularity) %>% #<<
+  head(5)
+```
+
+```{r,echo=FALSE,eval=TRUE}
+spotify %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(-track_popularity) %>% 
+  head(5) %>% 
+  knitr::kable()
+```
+
+Hold up, why is it repeating like that?    
+One track can be in multiple playlists! That's why! Now what do we do?
+Let's select only the distinct or unique rows.
+
+For that we can use the distinct function. The distinct function takes in a tibble as the first argument and then a set of columns to find distinctive rows or uses all columns if no arguments are given. You can see the pattern here right?
+
+---
+
+## Task No. 1 is completed!
+
+Finally by using the distinct function which returns only the unique rows in the dataframe we were able to get the top 5 track names and artists. 
+
+```{r,echo=TRUE,eval=FALSE}
+spotify %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(-track_popularity) %>% 
+  distinct() %>% #<<
+  head(5) %>% 
+  knitr::kable()
+```
+
+```{r,echo=FALSE,eval=TRUE}
+spotify %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(-track_popularity) %>% 
+  distinct() %>% 
+  head(5) %>% 
+  knitr::kable()
+```
+
+Let's send this out to your supervisor now! 
+
+---
+
+## Task No. 1 last final changes
+
+Ding! Ding!
+
+There's a new message from your supervisor on Slack. She wants this to be more presentable on the user interface by renaming the columns and removing the popularity. Well we already know how to select columns that we don't need, but what about renaming columns?
+
+The rename function takes in pairs of arguments in the form of *new_name = old_name* so we can rename the columns that we want with that function. This is in addition to the first argument of a tibble to do all of these on. 
+
+---
+
+Using the rename function we were able to change the names of the column names as well
+
+```{r,echo=TRUE,eval=FALSE}
+spotify %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(-track_popularity) %>% 
+  distinct() %>% 
+  head(5) %>% 
+  select(-track_popularity) %>% 
+  rename(Song = track_name, Artist = track_artist) %>% #<<
+  knitr::kable()
+```
+
+```{r,echo=FALSE,eval=TRUE}
+spotify %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(-track_popularity) %>% 
+  distinct() %>% 
+  head(5) %>% 
+  select(-track_popularity) %>% 
+  rename(Song = track_name, Artist = track_artist) %>% 
+  knitr::kable()
+```
+
+---
+
+## Recap of Task No. 1
+
+What did we learn from trying out Task No. 1?
+* select function helps us select the columns that we want
+* arrange function helps us arrange the table by columns
+* rename function helps us rename columns
+* distinct functions helps us select only the unique rows in the table
+
+---
+
+# Task No. 2 (Missing the Good old days)
+
+* Your supervisor just pointed out a funny thing in the table that you sent her It contains the most popular songs of all times! 
+* She is all right with it since we worked really hard on it, but she wants to show a table of the top 5 most popular songs in the past year. The snapshot we have right now is from January 2020 but our code will be used in real time even after 2021 according to your supervisor. 
+* First we need to make a new column indicating the year that the album was released in
+
+```{r}
+spotify %>% 
+  select(track_album_release_date) %>% 
+  head(2) 
+```
+
+Uh-oh, These are in a character format and you don't know how to get the year out of a character like this. Let's ask our supervisor on how to solve this. 
+
+---
+
+## lubridate can fix your dates
+
+Ding! Ding!    
+Your supervisor replied back telling you to use the function as.Date to make the column into a date and then the year function from the lubridate package. 
+
+That was quite a lot to digest!
+
+You go through the documentation and Google online and land on a StackOverflow page to find out that this code works out to give you the years that you need. 
+
+```{r,eval=FALSE}
+as.Date(spotify$track_album_release_date) %>% lubridate::year() #<<
+```
+
+Before you send this out to your supervisor you want to make sure that the code that you wrote is correct, so you start matching with the documentation to get a rough idea about what happens. 
+
+1. You create a vector of Dates from a vector of characters
+2. You get the year as a number from the year function in lubridate
+
+---
+
+## How do we modify the existing columns?
+
+We have to mutate the column just like the Covid19 virus is mutating by modifying the existing traits. The format goes along as new_column_name = modification. The modification should give out a vector that fits the number of rows in the dataset
+
+```{r}
+spotify %>% 
+  mutate(release_year = lubridate::year(as.Date(track_album_release_date))) %>% #<<
+  select(release_year) %>% 
+  head(2)
+```
+Success! We managed to get the years out. Now we need to get the maximum of these years.
+
+```{r}
+spotify_with_year <- spotify %>% 
+  mutate(release_year = lubridate::year(as.Date(track_album_release_date)))
+latest_year <- max(spotify_with_year$release_year,na.rm = TRUE)
+```
+
+---
+
+## How can we filter the songs that we want?
+
+Simple! we use the filter function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &,|, ~ etc. 
+
+```{r}
+spotify_with_year %>% 
+  filter(release_year == 2019) %>% #<<
+  select(track_name,release_year) %>% 
+  head(3)
+```
+
+Great! Now we need to plug these into our previous code and we are good to go!
+
+---
+
+## Task 2 is done and dusted
+
+```{r,echo=TRUE,eval=FALSE}
+spotify_with_year %>%
+  filter(release_year == 2019) %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(-track_popularity) %>% 
+  distinct() %>% 
+  head(5) %>% 
+  select(-track_popularity) %>% 
+  rename(Song = track_name, Artist = track_artist)
+```
+
+```{r,echo=FALSE,eval=TRUE}
+spotify_with_year %>%
+  filter(release_year == 2019) %>% 
+  select(track_name,track_artist,track_popularity) %>% 
+  arrange(-track_popularity) %>% 
+  distinct() %>% 
+  head(5) %>% 
+  select(-track_popularity) %>% 
+  rename(Song = track_name, Artist = track_artist) %>% 
+  knitr::kable()
+```
+
+---
+
+## Recap of Task No. 2
+
+What did we learn from trying out Task No.2 ?
+
+* as.Date function converts character columns to Date columns
+* year function from lubridate package gets the year from a Date column
+* mutate function mutates existing columns to create new ones
+* filter function helps to filter the rows based on a condition
+
+---
+
+# Task No. 3 (Playlists for your moods)
+
+The supervisor has one final task for you.   
+
+You need to give the average scores for energy, danceability, instrumentalness, valence for each playlist to so that the supervisor can plus that dataset into her Plotly Radar plot function. 
+
+This is going to be a tough one! You sit down and sketch out how the final dataset should look like and this is what you got, 
+
+```{r,echo=FALSE}
+tibble(
+  playlist_genre = c("some name 1","some name 2"),
+  avg_energy = round(runif(2),1),
+  avg_dance = round(runif(2),1),
+  avg_instu = round(runif(2),1),
+  avg_valen = round(runif(2),1),
+) %>% 
+  knitr::kable()
+```
+
+So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together
+
+---
+
+## Understanding group_by
+
+We can use the group_by function in dplyr for this. But the group_by function can be tricky sometimes so you dig a bit deeper and get the following idea. 
+
+* group_by function literally groups rows with the same combination of values together
+* any mutate function that is applied will apply within the group
+
+---
+
+With that in your head you first write out the group_by command and decide to be adventurous and mutate a new column for each of the averages. 
+
+```{r}
+spotify %>% 
+  group_by(playlist_genre) %>% #<<
+  mutate(avg_energy = mean(energy,na.rm=TRUE),avg_dance = mean(danceability,na.rm=TRUE),
+            avg_instu = mean(instrumentalness,na.rm=TRUE),avg_valen = mean(valence,na.rm=TRUE)) %>%
+  rename(Genre = playlist_genre,Energetic = avg_energy, Dance = avg_dance,
+         Instrumentals = avg_instu, Upbeat = avg_valen) %>% 
+  select(Genre,Energetic,Dance,Instrumentals, Upbeat) %>% 
+  head(4) 
+```
+
+Wait that doesn't look right, We need only one row per genre. Do we have to call distinct again? Or is there an easier way than having to mutate -> select -> distinct?
+
+---
+
+## Task No. 3 is over!
+
+Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function summarize to make the code more readable and safer. 
+
+And now after digging on the summarize function, you realize that by simply replacing mutate with summarize your code now looks like this.
+
+```{r,echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE}
+spotify %>% 
+  group_by(playlist_genre) %>% 
+  summarize(avg_energy = mean(energy,na.rm=TRUE),avg_dance = mean(danceability,na.rm=TRUE), #<<
+            avg_instu = mean(instrumentalness,na.rm=TRUE),avg_valen = mean(valence,na.rm=TRUE)) %>% #<<
+  rename(Genre = playlist_genre,Energetic = avg_energy, Dance = avg_dance,
+         Instrumentals = avg_instu, Upbeat = avg_valen) %>% 
+  head(5)
+```
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+spotify %>% 
+  group_by(playlist_genre) %>% 
+  summarize(avg_energy = mean(energy,na.rm=TRUE),avg_dance = mean(danceability,na.rm=TRUE),
+            avg_instu = mean(instrumentalness,na.rm=TRUE),avg_valen = mean(valence,na.rm=TRUE)) %>%
+  rename(Genre = playlist_genre,Energetic = avg_energy, Dance = avg_dance,
+         Instrumentals = avg_instu, Upbeat = avg_valen) %>% 
+  head(5) %>% 
+  knitr::kable()
+```
+
+---
+
+## Recap of Task No. 3
+
+What did we learn from trying out Task No. 3?
+
+* group_by helps to group the dataset into groups based on the values of a column
+* summarize helps to make a summary of a grouped / ungrouped dataset to get summary statistics
+
+---
+
+# Summary
+
+## What did we learn today?
+
+* Data wrangling is kind of like meal prep where you prepare your ingredients(the raw data) for the final dish(the model or visualization)
+* There are several functions in different packages such as filter,mutate,select,arrange,group_by,summarize,distinct from the dplyr package and even date functions from the lubridate package that help to wrangle data into the format we need.
+
+## Where to go from here?
+
+* Get the Spotify Developer Account and access the APIs to create a dataset that is upto date and matches your style. 
+* Create an R shiny dashboard that can show interactive graphs of all the artists and where they fall on different indexes which are based on how positive the song is and so on. 
+
+---
+
+# Thank you! 
+
+## Where to find me?
+
+* Twitter: @janithwanni
+* Github: @janithwanni
+* Linkedin: Janith Wanniarachchi

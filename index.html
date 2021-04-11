@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Wrangling with R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Janith Wanniarachchi" />
+    <script src="libs/header-attrs-2.6/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Wrangling with R
+## RLadies Colombo April Meetup
+### Janith Wanniarachchi
+### Data Science Intern at Trabeya, <br/> Consultant Data Analyst at Creative Hub, <br/> BSc. Statistics (Hons.)(UG) University of Sri Jayewardenepura
+
+---
+
+
+# Hi there
+
+* My name is Janith Wanniarachchi, I'm currently studying in University of Sri Jayewardenepura for my BSc. in Statistics and also I'm currently interning as a data scientist at Trabeya and working part time as a Consultant Data Analyst at Creative Hub. 
+
+* I have contributed to two R packages maintained by Dr. Thiyanga Thalagala, DSJobTracker and tsdataleaks. Both of them are still a work in progress and I'm still working on improving the performance of the packages. 
+
+* I have competed in several Datathons locally and have placed in Runners up and Top Finalists positions.
+
+* That's enough about me for now, let's get right on to today's session!
+
+---
+
+# What is this data *wrangling*?
+
+* Data wrangling is where we take a raw dataset and transform it into a format that fits for different tasks
+
+* Simply it's like meal prep where we get the data ready to make the main dish (in this case it could be a model or visualization)
+
+* There are several packages that can help with data wrangling but for today we would be scratching the surface of the dplyr package in the tidyverse ecosystem.
+
+---
+
+# What are we going to do today?
+
+* I won't be teaching you a list of functions and how to use them today, instead I will be walking you through an actual scenario where these functions might be needed. 
+
+* The main outcome of this should be to have an idea about how to approach a problem and how to combine different tools that you have under your belt. 
+
+* In other news, Spotify came to Sri Lanka! Why not make a recommender system for Spotify? 
+
+* We will be using the [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md) data on Spotify from 2020-01-21.
+
+* At the end we will talk about extending this into an actual real time application.
+
+---
+
+
+
+## Here's the scene,
+
+* You are a new data science intern at Spotify and you are told to work on a simple csv dataset that resembles the actual dataset. 
+
+* You are given a snapshot of the dataset from 2020 to work on and your supervisor will be making the entire user interface of the recommender system. 
+
+* The supervisor will let you make the R codes locally using the dataset that was given to you and she will on the other end work on making the functions that show the plots and tables to the user. 
+
+* Usually most of your time will be spent on data wrangling hence she entrusts you to get the job done. 
+
+---
+
+
+```
+## Rows: 32,833
+## Columns: 23
+## $ track_id                 &lt;chr&gt; "6f807x0ima9a1j3VPbc7VN", "0r7CVbZ…
+## $ track_name               &lt;chr&gt; "I Don't Care (with Justin Bieber)…
+## $ track_artist             &lt;chr&gt; "Ed Sheeran", "Maroon 5", "Zara La…
+## $ track_popularity         &lt;dbl&gt; 66, 67, 70, 60, 69, 67, 62, 69, 68…
+## $ track_album_id           &lt;chr&gt; "2oCs0DGTsRO98Gh5ZSl2Cx", "63rPSO2…
+## $ track_album_name         &lt;chr&gt; "I Don't Care (with Justin Bieber)…
+## $ track_album_release_date &lt;chr&gt; "2019-06-14", "2019-12-13", "2019-…
+## $ playlist_name            &lt;chr&gt; "Pop Remix", "Pop Remix", "Pop Rem…
+## $ playlist_id              &lt;chr&gt; "37i9dQZF1DXcZDD7cfEKhW", "37i9dQZ…
+## $ playlist_genre           &lt;chr&gt; "pop", "pop", "pop", "pop", "pop",…
+## $ playlist_subgenre        &lt;chr&gt; "dance pop", "dance pop", "dance p…
+## $ danceability             &lt;dbl&gt; 0.748, 0.726, 0.675, 0.718, 0.650,…
+## $ energy                   &lt;dbl&gt; 0.916, 0.815, 0.931, 0.930, 0.833,…
+## $ key                      &lt;dbl&gt; 6, 11, 1, 7, 1, 8, 5, 4, 8, 2, 6, …
+## $ loudness                 &lt;dbl&gt; -2.634, -4.969, -3.432, -3.778, -4…
+## $ mode                     &lt;dbl&gt; 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1…
+## $ speechiness              &lt;dbl&gt; 0.0583, 0.0373, 0.0742, 0.1020, 0.…
+## $ acousticness             &lt;dbl&gt; 0.10200, 0.07240, 0.07940, 0.02870…
+## $ instrumentalness         &lt;dbl&gt; 0.00e+00, 4.21e-03, 2.33e-05, 9.43…
+## $ liveness                 &lt;dbl&gt; 0.0653, 0.3570, 0.1100, 0.2040, 0.…
+## $ valence                  &lt;dbl&gt; 0.518, 0.693, 0.613, 0.277, 0.725,…
+## $ tempo                    &lt;dbl&gt; 122.036, 99.972, 124.008, 121.956,…
+## $ duration_ms              &lt;dbl&gt; 194754, 162600, 176616, 169093, 18…
+```
+
+---
+
+# What are all these numbers?
+
+* The entire data dictionary was found [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md#spotify_songscsv) and you manage to jot it down as follows
+
+* We have the id,genre and subgenre of each playlist 
+
+* the id,name and release date of each album 
+
+* finally id,name,artist and popularity of each track. 
+
+* In addition we have the following features of songs.
+  + danceability : is it suitable for dancing (range: [0,1])
+  + energy : how intense and active is the song (range: [0,1])
+  + loudness : the overall loudness of track in dB (range: [-60,0])
+  + speechiness : is there a lot of speech in it? (range: [0,1])
+  + accousticness : is the song an acoustic song (range: [0,1])
+  + instrumentalness : does the song have no vocal content (range: [0,1])
+  + liveness : is there an audience in the song (range: [0,1])
+  + valence : how positive is the song
+  + key : the key of the song (CAUTION NA's means that there is no key)
+  + mode : 1 if its a major or 0 if its a minor
+  + tempo : BPM of the song
+
+---
+
+# Task No. 1 (Spot the Cool Kids)
+
+* Your supervisor has asked you to show the top 5 popular tracks and their artists.
+
+* That's quite a lot to do for the first task!
+
+* Let's break it down. 
+
+* First let's select the tracks and their artist names and how popular they are. That should work right?
+
+---
+
+## How do we *select* column names?
+
+
+```r
+spotify %&gt;% 
+* select(track_name,track_artist,track_popularity)
+```
+
+* The select command helps us select columns that we want, and we can give a range of columns or even the columns that we don't want to have.
+
+* The select function works as follows. 
+  + The first argument is the tibble or data frame, in this case we have piped using the pipe operator
+  + the rest of the arguments are the different ways of selecting the variables. For example if we want to select columnA from tibble t we would say select(t,A). Likewise if we want to select everything except column B from tibble t we would say select(t,-B).
+  
+---
+
+Right now you know how to select the top rows of a tibble with the head function, so if you can get the tracks arranged by their popularity in ascending order then everything's all set!
+
+This is where the arrange function comes to play. The arrange function takes up a tibble as the first input and a set of columns to order by increasing or decreasing order. 
+
+
+```r
+spotify %&gt;% 
+  select(track_name,track_artist,track_popularity) %&gt;% 
+* arrange(track_popularity) %&gt;%
+  head(5)
+```
+
+
+|track_name          |track_artist        | track_popularity|
+|:-------------------|:-------------------|----------------:|
+|Siren               |SUNMI               |                0|
+|Lollipop (Candyman) |Aqua                |                0|
+|Around The World    |Aqua                |                0|
+|I'm Yours           |Influencers Worship |                0|
+|Talk About It       |Bancali             |                0|
+
+Wait something's not right, this isn't in descending order! We have to tell the arrange function to sort them in descending order. 
+
+---
+
+You can tell the arrange function to order in descending order by using a minus operator in front, somewhat similar to the select function. 
+
+
+```r
+spotify %&gt;% 
+  select(track_name,track_artist,track_popularity) %&gt;% 
+* arrange(-track_popularity) %&gt;%
+  head(5)
+```
+
+
+|track_name   |track_artist   | track_popularity|
+|:------------|:--------------|----------------:|
+|Dance Monkey |Tones and I    |              100|
+|Dance Monkey |Tones and I    |              100|
+|ROXANNE      |Arizona Zervas |               99|
+|ROXANNE      |Arizona Zervas |               99|
+|ROXANNE      |Arizona Zervas |               99|
+
+Hold up, why is it repeating like that?    
+One track can be in multiple playlists! That's why! Now what do we do?
+Let's select only the distinct or unique rows.
+
+For that we can use the distinct function. The distinct function takes in a tibble as the first argument and then a set of columns to find distinctive rows or uses all columns if no arguments are given. You can see the pattern here right?
+
+---
+
+## Task No. 1 is completed!
+
+Finally by using the distinct function which returns only the unique rows in the dataframe we were able to get the top 5 track names and artists. 
+
+
+```r
+spotify %&gt;% 
+  select(track_name,track_artist,track_popularity) %&gt;% 
+  arrange(-track_popularity) %&gt;% 
+* distinct() %&gt;%
+  head(5) %&gt;% 
+  knitr::kable()
+```
+
+
+|track_name      |track_artist   | track_popularity|
+|:---------------|:--------------|----------------:|
+|Dance Monkey    |Tones and I    |              100|
+|ROXANNE         |Arizona Zervas |               99|
+|Tusa            |KAROL G        |               98|
+|Memories        |Maroon 5       |               98|
+|Blinding Lights |The Weeknd     |               98|
+
+Let's send this out to your supervisor now! 
+
+---
+
+## Task No. 1 last final changes
+
+Ding! Ding!
+
+There's a new message from your supervisor on Slack. She wants this to be more presentable on the user interface by renaming the columns and removing the popularity. Well we already know how to select columns that we don't need, but what about renaming columns?
+
+The rename function takes in pairs of arguments in the form of *new_name = old_name* so we can rename the columns that we want with that function. This is in addition to the first argument of a tibble to do all of these on. 
+
+---
+
+Using the rename function we were able to change the names of the column names as well
+
+
+```r
+spotify %&gt;% 
+  select(track_name,track_artist,track_popularity) %&gt;% 
+  arrange(-track_popularity) %&gt;% 
+  distinct() %&gt;% 
+  head(5) %&gt;% 
+  select(-track_popularity) %&gt;% 
+* rename(Song = track_name, Artist = track_artist) %&gt;%
+  knitr::kable()
+```
+
+
+|Song            |Artist         |
+|:---------------|:--------------|
+|Dance Monkey    |Tones and I    |
+|ROXANNE         |Arizona Zervas |
+|Tusa            |KAROL G        |
+|Memories        |Maroon 5       |
+|Blinding Lights |The Weeknd     |
+
+---
+
+## Recap of Task No. 1
+
+What did we learn from trying out Task No. 1?
+* select function helps us select the columns that we want
+* arrange function helps us arrange the table by columns
+* rename function helps us rename columns
+* distinct functions helps us select only the unique rows in the table
+
+---
+
+# Task No. 2 (Missing the Good old days)
+
+* Your supervisor just pointed out a funny thing in the table that you sent her It contains the most popular songs of all times! 
+* She is all right with it since we worked really hard on it, but she wants to show a table of the top 5 most popular songs in the past year. The snapshot we have right now is from January 2020 but our code will be used in real time even after 2021 according to your supervisor. 
+* First we need to make a new column indicating the year that the album was released in
+
+
+```r
+spotify %&gt;% 
+  select(track_album_release_date) %&gt;% 
+  head(2) 
+```
+
+```
+## # A tibble: 2 x 1
+##   track_album_release_date
+##   &lt;chr&gt;                   
+## 1 2019-06-14              
+## 2 2019-12-13
+```
+
+Uh-oh, These are in a character format and you don't know how to get the year out of a character like this. Let's ask our supervisor on how to solve this. 
+
+---
+
+## lubridate can fix your dates
+
+Ding! Ding!    
+Your supervisor replied back telling you to use the function as.Date to make the column into a date and then the year function from the lubridate package. 
+
+That was quite a lot to digest!
+
+You go through the documentation and Google online and land on a StackOverflow page to find out that this code works out to give you the years that you need. 
+
+
+```r
+*as.Date(spotify$track_album_release_date) %&gt;% lubridate::year()
+```
+
+Before you send this out to your supervisor you want to make sure that the code that you wrote is correct, so you start matching with the documentation to get a rough idea about what happens. 
+
+1. You create a vector of Dates from a vector of characters
+2. You get the year as a number from the year function in lubridate
+
+---
+
+## How do we modify the existing columns?
+
+We have to mutate the column just like the Covid19 virus is mutating by modifying the existing traits. The format goes along as new_column_name = modification. The modification should give out a vector that fits the number of rows in the dataset
+
+
+```r
+spotify %&gt;% 
+* mutate(release_year = lubridate::year(as.Date(track_album_release_date))) %&gt;%
+  select(release_year) %&gt;% 
+  head(2)
+```
+
+```
+## # A tibble: 2 x 1
+##   release_year
+##          &lt;dbl&gt;
+## 1         2019
+## 2         2019
+```
+Success! We managed to get the years out. Now we need to get the maximum of these years.
+
+
+```r
+spotify_with_year &lt;- spotify %&gt;% 
+  mutate(release_year = lubridate::year(as.Date(track_album_release_date)))
+latest_year &lt;- max(spotify_with_year$release_year,na.rm = TRUE)
+```
+
+---
+
+## How can we filter the songs that we want?
+
+Simple! we use the filter function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &amp;,|, ~ etc. 
+
+
+```r
+spotify_with_year %&gt;% 
+* filter(release_year == 2019) %&gt;%
+  select(track_name,release_year) %&gt;% 
+  head(3)
+```
+
+```
+## # A tibble: 3 x 2
+##   track_name                                            release_year
+##   &lt;chr&gt;                                                        &lt;dbl&gt;
+## 1 I Don't Care (with Justin Bieber) - Loud Luxury Remix         2019
+## 2 Memories - Dillon Francis Remix                               2019
+## 3 All the Time - Don Diablo Remix                               2019
+```
+
+Great! Now we need to plug these into our previous code and we are good to go!
+
+---
+
+## Task 2 is done and dusted
+
+
+```r
+spotify_with_year %&gt;%
+  filter(release_year == 2019) %&gt;% 
+  select(track_name,track_artist,track_popularity) %&gt;% 
+  arrange(-track_popularity) %&gt;% 
+  distinct() %&gt;% 
+  head(5) %&gt;% 
+  select(-track_popularity) %&gt;% 
+  rename(Song = track_name, Artist = track_artist)
+```
+
+
+|Song            |Artist         |
+|:---------------|:--------------|
+|Dance Monkey    |Tones and I    |
+|ROXANNE         |Arizona Zervas |
+|Tusa            |KAROL G        |
+|Memories        |Maroon 5       |
+|Blinding Lights |The Weeknd     |
+
+---
+
+## Recap of Task No. 2
+
+What did we learn from trying out Task No.2 ?
+
+* as.Date function converts character columns to Date columns
+* year function from lubridate package gets the year from a Date column
+* mutate function mutates existing columns to create new ones
+* filter function helps to filter the rows based on a condition
+
+---
+
+# Task No. 3 (Playlists for your moods)
+
+The supervisor has one final task for you.   
+
+You need to give the average scores for energy, danceability, instrumentalness, valence for each playlist to so that the supervisor can plus that dataset into her Plotly Radar plot function. 
+
+This is going to be a tough one! You sit down and sketch out how the final dataset should look like and this is what you got, 
+
+
+|playlist_genre | avg_energy| avg_dance| avg_instu| avg_valen|
+|:--------------|----------:|---------:|---------:|---------:|
+|some name 1    |        0.7|       0.0|       0.6|       0.8|
+|some name 2    |        1.0|       0.7|       0.7|       0.6|
+
+So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together
+
+---
+
+## Understanding group_by
+
+We can use the group_by function in dplyr for this. But the group_by function can be tricky sometimes so you dig a bit deeper and get the following idea. 
+
+* group_by function literally groups rows with the same combination of values together
+* any mutate function that is applied will apply within the group
+
+---
+
+With that in your head you first write out the group_by command and decide to be adventurous and mutate a new column for each of the averages. 
+
+
+```r
+spotify %&gt;% 
+* group_by(playlist_genre) %&gt;%
+  mutate(avg_energy = mean(energy,na.rm=TRUE),avg_dance = mean(danceability,na.rm=TRUE),
+            avg_instu = mean(instrumentalness,na.rm=TRUE),avg_valen = mean(valence,na.rm=TRUE)) %&gt;%
+  rename(Genre = playlist_genre,Energetic = avg_energy, Dance = avg_dance,
+         Instrumentals = avg_instu, Upbeat = avg_valen) %&gt;% 
+  select(Genre,Energetic,Dance,Instrumentals, Upbeat) %&gt;% 
+  head(4) 
+```
+
+```
+## # A tibble: 4 x 5
+## # Groups:   Genre [1]
+##   Genre Energetic Dance Instrumentals Upbeat
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;  &lt;dbl&gt;
+## 1 pop       0.701 0.639        0.0599  0.504
+## 2 pop       0.701 0.639        0.0599  0.504
+## 3 pop       0.701 0.639        0.0599  0.504
+## 4 pop       0.701 0.639        0.0599  0.504
+```
+
+Wait that doesn't look right, We need only one row per genre. Do we have to call distinct again? Or is there an easier way than having to mutate -&gt; select -&gt; distinct?
+
+---
+
+## Task No. 3 is over!
+
+Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function summarize to make the code more readable and safer. 
+
+And now after digging on the summarize function, you realize that by simply replacing mutate with summarize your code now looks like this.
+
+
+```r
+spotify %&gt;% 
+  group_by(playlist_genre) %&gt;% 
+* summarize(avg_energy = mean(energy,na.rm=TRUE),avg_dance = mean(danceability,na.rm=TRUE),
+*           avg_instu = mean(instrumentalness,na.rm=TRUE),avg_valen = mean(valence,na.rm=TRUE)) %&gt;%
+  rename(Genre = playlist_genre,Energetic = avg_energy, Dance = avg_dance,
+         Instrumentals = avg_instu, Upbeat = avg_valen) %&gt;% 
+  head(5)
+```
+
+
+|Genre | Energetic|     Dance| Instrumentals|    Upbeat|
+|:-----|---------:|---------:|-------------:|---------:|
+|edm   | 0.8024759| 0.6550409|     0.2185779| 0.4006555|
+|latin | 0.7083125| 0.7132873|     0.0444470| 0.6055104|
+|pop   | 0.7010278| 0.6393017|     0.0598763| 0.5035210|
+|r&amp;b   | 0.5909343| 0.6701793|     0.0289203| 0.5312306|
+|rap   | 0.6507084| 0.7183528|     0.0759972| 0.5050900|
+
+---
+
+## Recap of Task No. 3
+
+What did we learn from trying out Task No. 3?
+
+* group_by helps to group the dataset into groups based on the values of a column
+* summarize helps to make a summary of a grouped / ungrouped dataset to get summary statistics
+
+---
+
+# Summary
+
+## What did we learn today?
+
+* Data wrangling is kind of like meal prep where you prepare your ingredients(the raw data) for the final dish(the model or visualization)
+* There are several functions in different packages such as filter,mutate,select,arrange,group_by,summarize,distinct from the dplyr package and even date functions from the lubridate package that help to wrangle data into the format we need.
+
+## Where to go from here?
+
+* Get the Spotify Developer Account and access the APIs to create a dataset that is upto date and matches your style. 
+* Create an R shiny dashboard that can show interactive graphs of all the artists and where they fall on different indexes which are based on how positive the song is and so on. 
+
+---
+
+# Thank you! 
+
+## Where to find me?
+
+* Twitter: @janithwanni
+* Github: @janithwanni
+* Linkedin: Janith Wanniarachchi
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
