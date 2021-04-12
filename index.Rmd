@@ -1,50 +1,79 @@
 ---
 title: "Data Wrangling with R"
-subtitle: "RLadies Colombo April Meetup"
-author: "Janith Wanniarachchi"
-institute: "Data Science Intern at Trabeya, <br/> Consultant Data Analyst at Creative Hub, <br/> BSc. Statistics (Hons.)(UG) University of Sri Jayewardenepura"
+subtitle: "RLadies Colombo - April 2021 Meetup"
 output:
   xaringan::moon_reader:
+    css: [default, kunoichi, metropolis-fonts,"index.css"]
     lib_dir: libs
     nature:
-      highlightStyle: github
+      highlightStyle: tango
       highlightLines: true
       countIncrementalSlides: false
 ---
 
-# Hi there
+<h1 style="text-align:center;color:#363a59">Hi there</h1>
 
-* My name is Janith Wanniarachchi, I'm currently studying in University of Sri Jayewardenepura for my BSc. in Statistics and also I'm currently interning as a data scientist at Trabeya and working part time as a Consultant Data Analyst at Creative Hub. 
+.pull-left[
+<img src="images/profile_picture.jpg" style="
+    height: auto;
+    border-radius: 50%;
+    border: 3px solid #414770;
+    width:55%;
+    position:relative;left:20%"/>
+<hr/>
+<br/>
+.center[
+<h2 style="color:#5b85aa"> Janith Wanniarachchi   </h2>
+<br/>
+.status-highlight[BSc. Statistics (Special) Undergraduate] at University of Sri Jayewardenepura, Sri Lanka,   
 
-* I have co-authored two R packages maintained by Dr. Thiyanga Thalagala, DSJobTracker and tsdataleaks. Both of them are still a work in progress and I'm still working on improving the performance of the packages. 
+.status-highlight[Data Science Intern] at Trabeya,   
 
-* I have competed in several Datathons locally and have placed in Runners up and Top Finalists positions.
+.status-highlight[Consultant Data Analyst] at Creative Hub.    
+]
+]
 
-* That's enough about me for now, let's get right on to today's session!
+.pull-right[
 
+<h2> My adventures with R</h2>
+
+Co-author of two R packages maintained by Dr. Thiyanga Thalagala, [DSJobTracker](https://github.com/thiyangt/DSjobtracker) and [tsdataleaks](https://github.com/thiyangt/tsdataleaks). 
+
+.center[<img src="https://github.com/thiyangt/DSjobtracker/raw/master/hexsticker/figures/hexsticker.png" style="width: 30%"> <img src="images/dplyr_hex.png" style="width: 30%">]
+
+Runner's up in two datathons and finalist in two datathons.
+
+<h2 style="color:#5b85aa">Where to find me?</h2>
+
+* Twitter: [@janithcwanni](https://twitter.com/janithcwanni)
+* Github: [@janithwanni](https://github.com/janithwanni)
+* Linkedin: [Janith Wanniarachchi](https://www.linkedin.com/in/janith-wanniarachchi-462851117/)
+
+]
 ---
 
 # What is this data *wrangling*?
 
+.center[<img src="images/data_wrangler.png" style="width:50%">]
+.footnote[Illustration from Hadley Wickham’s 2019 talk, The Joy of Functional Programming ]
 * Data wrangling is where we take a raw dataset and transform it into a format that fits for different tasks
 
 * Simply it's like meal prep where we get the data ready to make the main dish (in this case it could be a model or visualization)
 
-* There are several packages that can help with data wrangling but for today we would be scratching the surface of the dplyr package in the tidyverse ecosystem.
+* There are several packages that can help with data wrangling but for today we would be scratching the surface of the `dplyr` package in the tidyverse ecosystem.
+
 
 ---
 
-# What are we going to do today?
+<h1 style="text-align:center">What are we going to do today</h1>
+
+.center[<img src="https://i.imgflip.com/55djd3.jpg"/>]
+
+???
 
 * I won't be teaching you a list of functions and how to use them today, instead I will be walking you through an actual scenario where these functions might be needed. 
 
 * The main outcome of this should be to have an idea about how to approach a problem and how to combine different tools that you have under your belt. 
-
-* In other news, Spotify came to Sri Lanka! Why not make a recommender system for Spotify? 
-
-* We will be using the [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md) data on Spotify from 2020-01-21.
-
-* At the end we will talk about extending this into an actual real time application.
 
 ---
 
@@ -55,15 +84,29 @@ spotify <- read_csv("data/spotify-songs.csv")
 
 ## Here's the scene,
 
-* You are a new data science intern at Spotify and you are told to work on a simple csv dataset that resembles the actual dataset. 
+.left-column[
+<br/><br/>
+<img src="images/spotify_logo.png"/>
+<br/><br/>
+.center[<span style="font-size:64pt"> + </span>] 
+<br/>
+<img src="images/rstudio_logo_cropped.png"/>
+]
+.right-column[* You are the new Data Science intern at Spotify! and you are told to work on a simple csv dataset that resembles the actual dataset. 
 
 * You are given a snapshot of the dataset from 2020 to work on and your supervisor will be making the entire user interface of the recommender system. 
+
+* She told us to use the [TidyTuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md) data on Spotify from 2020-01-21.
+
+* At the end she will talk about extending this into an actual real time application.
 
 * The supervisor will let you make the R codes locally using the dataset that was given to you and she will on the other end work on making the functions that show the plots and tables to the user. 
 
 * Usually most of your time will be spent on data wrangling hence she entrusts you to get the job done. 
-
+]
 ---
+
+### Glimpse at the data
 
 ```{r,echo=FALSE,comment=NA}
 spotify %>% glimpse(width = 70)
@@ -71,7 +114,12 @@ spotify %>% glimpse(width = 70)
 
 ---
 
+<img src="images/numbers_mason_meme.jpg"/>
+
+---
+
 # What are all these numbers?
+
 
 * The entire data dictionary was found [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md#spotify_songscsv) and you manage to jot it down as follows
 
@@ -463,11 +511,7 @@ What did we learn from trying out Task No. 3?
 * Create an R shiny dashboard that can show interactive graphs of all the artists and where they fall on different indexes which are based on how positive the song is and so on. 
 
 ---
+class: center, middle
 
 # Thank you! 
 
-## Where to find me?
-
-* Twitter: @janithwanni
-* Github: @janithwanni
-* Linkedin: Janith Wanniarachchi

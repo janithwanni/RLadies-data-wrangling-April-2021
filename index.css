@@ -1,0 +1,13 @@
+a, a > code {
+  color: rgb(199, 5, 76);
+  text-decoration: none;
+}
+
+.status-highlight{
+  color: #ef8354;
+  font-weight: 700;
+}
+
+.status-place{
+  color: #ef8354;
+}
