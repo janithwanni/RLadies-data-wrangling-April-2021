@@ -6,7 +6,6 @@
     <script src="libs/header-attrs-2.6/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/kunoichi.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="index.css" type="text/css" />
   </head>
   <body>
@@ -47,15 +46,11 @@ class: center, middle, inverse, title-slide
 
 Co-author of two R packages maintained by Dr. Thiyanga Thalagala, [DSJobTracker](https://github.com/thiyangt/DSjobtracker) and [tsdataleaks](https://github.com/thiyangt/tsdataleaks). 
 
-.center[&lt;img src="https://github.com/thiyangt/DSjobtracker/raw/master/hexsticker/figures/hexsticker.png" style="width: 30%"&gt; &lt;img src="images/dplyr_hex.png" style="width: 30%"&gt;]
+.center[&lt;img src="https://github.com/thiyangt/DSjobtracker/raw/master/hexsticker/figures/hexsticker.png" style="width: 30%"&gt; &lt;img src="https://github.com/thiyangt/ThiTal/raw/master/static/Slides/isf2020/hexsticker.png" style="width: 30%"&gt;]
 
 Runner's up in two datathons and finalist in two datathons.
 
-&lt;h2 style="color:#5b85aa"&gt;Where to find me?&lt;/h2&gt;
 
-* Twitter: [@janithcwanni](https://twitter.com/janithcwanni)
-* Github: [@janithwanni](https://github.com/janithwanni)
-* Linkedin: [Janith Wanniarachchi](https://www.linkedin.com/in/janith-wanniarachchi-462851117/)
 
 ]
 ---
@@ -143,8 +138,9 @@ $ duration_ms              &lt;dbl&gt; 194754, 162600, 176616, 169093, 18…
 ```
 
 ---
+class: middle, center
 
-&lt;img src="images/numbers_mason_meme.jpg"/&gt;
+&lt;img src="images/numbers_mason_meme.jpg" style="width: 150%;height: 150%"/&gt;
 
 ---
 
@@ -167,10 +163,15 @@ $ duration_ms              &lt;dbl&gt; 194754, 162600, 176616, 169093, 18…
   + accousticness : is the song an acoustic song (range: [0,1])
   + instrumentalness : does the song have no vocal content (range: [0,1])
   + liveness : is there an audience in the song (range: [0,1])
-  + valence : how positive is the song
+  + valence : how positive is the song (range: [0,1])
   + key : the key of the song (CAUTION NA's means that there is no key)
   + mode : 1 if its a major or 0 if its a minor
   + tempo : BPM of the song
+
+---
+class: middle, center, title-only-slide
+
+&lt;h1&gt;Task No. 1 &lt;br/&gt;(Spot the Cool Kids)&lt;/h1&gt;
 
 ---
 
@@ -200,6 +201,7 @@ spotify %&gt;%
   + The first argument is the tibble or data frame, in this case we have piped using the pipe operator
   + The rest of the arguments are the different ways of selecting the variables. 
   + For example if we want to select columnA from tibble t we would say `select(t,A)`. Likewise if we want to select everything except column B from tibble t we would say `select(t,-B)`.
+  + you can even use a set of functions called tidy selectors to select columns based on how the name starts or ends, (For example `select(t,starts_with("LKR_"))`)
   
 ---
 
@@ -284,11 +286,28 @@ Let's send this out to your supervisor now!
 
 ## Task No. 1 last final changes
 
-Ding! Ding!
+.pull-left[Ding! Ding!
 
-There's a new message from your supervisor on Slack. She wants this to be more presentable on the user interface by renaming the columns and removing the popularity. Well we already know how to select columns that we don't need, but what about renaming columns?
+There's a new message from your supervisor on Slack. 
 
-The `rename` function takes in pairs of arguments in the form of *new_name = old_name* so we can rename the columns that we want with that function. This is in addition to the first argument of a tibble to do all of these on. 
+She wants this to be more presentable on the user interface by renaming the columns and removing the popularity. 
+
+&lt;img src="https://i.imgflip.com/2lhzmp.jpg" style="height:80%;width:80%;"/&gt;
+]
+
+.pull-right[
+
+Well we already know how to select columns that we don't need, but what about renaming columns?
+
+Based on your gut feeling you google up "rename tidyverse function" and land on the rename function to find out the following.
+
+The `rename` function takes in pairs of arguments in the form of 
+
+*new_name = old_name* 
+
+so we can rename the columns that we want with that function. 
+
+This is in addition to the first argument of a tibble to do all of these on. ]
 
 ---
 
@@ -325,12 +344,29 @@ What did we learn from trying out Task No. 1?
 * `rename` function helps us rename columns
 * `distinct` functions helps us select only the unique rows in the table
 
+Congratulations! We finished one task at our internship at Spotify!
+
+.center[&lt;img src="https://media.giphy.com/media/kBZBlLVlfECvOQAVno/giphy.gif" /&gt;]
+
+---
+class: center,middle, title-only-slide
+
+&lt;h1&gt;Task No. 2 &lt;br/&gt; (Missing the Good old days)&lt;/h1&gt;
+
 ---
 
 # Task No. 2 (Missing the Good old days)
 
-* Your supervisor just pointed out a funny thing in the table that you sent her It contains the most popular songs of all times! 
-* She is all right with it since we worked really hard on it, but she wants to show a table of the top 5 most popular songs in the past year. The snapshot we have right now is from January 2020 but our code will be used in real time even after 2021 according to your supervisor. 
+.pull-left[
+* Your supervisor just pointed out a funny thing in the table that you sent her. It contains the most popular songs of all times! 
+
+* She is all right with it since we worked really hard on it, but she wants to show a table of the top 5 most popular songs in the past year.
+
+* The snapshot she gave us is from January 2020 but our code will be used in real time even after 2021 according to her.
+]
+
+.pull-right[
+
 * First we need to make a new column indicating the year that the album was released in
 
 
@@ -350,9 +386,11 @@ spotify %&gt;%
 
 Uh-oh, These are in a character format and you don't know how to get the year out of a character like this. Let's ask our supervisor on how to solve this. 
 
+]
+
 ---
 
-## lubridate can fix your dates
+## lubricate can fix your string of horrible dates?
 
 Ding! Ding!    
 Your supervisor replied back telling you to use the function `as.Date` to make the column into a date and then the `year` function from the `lubridate` package. 
@@ -376,6 +414,9 @@ Before you send this out to your supervisor you want to make sure that the code 
 ## How do we modify the existing columns?
 
 We have to mutate the column just like the Covid19 virus is mutating by modifying the existing traits. The format goes along as new_column_name = modification. The modification should give out a vector that fits the number of rows in the dataset
+
+.center[&lt;img src="images/dplyr_mutate.png" style="width:50%"/&gt;]
+---
 
 
 ```r
@@ -404,6 +445,10 @@ latest_year &lt;- max(spotify_with_year$release_year,na.rm = TRUE)
 ---
 
 ## How can we filter the songs that we want?
+
+.center[&lt;img src="images/dplyr_filter_sm.png" style="width:70%"/&gt;]
+
+---
 
 Simple! we use the `filter` function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &amp;,|, ~ etc. 
 
@@ -462,6 +507,13 @@ What did we learn from trying out Task No.2 ?
 * `mutate` function mutates existing columns to create new ones
 * `filter` function helps to filter the rows based on a condition
 
+That was a huge leap from what we learned in Task No. 1! 
+---
+
+class: center,middle, title-only-slide
+
+&lt;h1&gt;Task No. 3 &lt;br/&gt; (Playlists for your moods)&lt;/h1&gt;
+
 ---
 
 # Task No. 3 (Playlists for your moods)
@@ -475,8 +527,8 @@ This is going to be a tough one! You sit down and sketch out how the final datas
 
 |playlist_genre | avg_energy| avg_dance| avg_instu| avg_valen|
 |:--------------|----------:|---------:|---------:|---------:|
-|some name 1    |        0.1|       0.7|       0.1|       0.5|
-|some name 2    |        0.1|       0.9|       0.8|       0.7|
+|some name 1    |        0.6|       0.6|       0.7|       0.8|
+|some name 2    |        0.9|       0.1|       0.9|       0.8|
 
 So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together
 
@@ -551,6 +603,9 @@ What did we learn from trying out Task No. 3?
 * `group_by` helps to group the dataset into groups based on the values of a column
 * `summarize` helps to make a summary of a grouped / ungrouped dataset to get summary statistics
 
+Finally! We finished all three tasks! We are now well on our way to start analysing data that come our way.
+
+.center[&lt;img src="https://en.meming.world/images/en/thumb/a/aa/Something_of_a_Scientist.jpg/600px-Something_of_a_Scientist.jpg" style="width:60%"/&gt;]
 ---
 
 # Summary
@@ -568,13 +623,25 @@ What did we learn from trying out Task No. 3?
 ---
 class: center, middle
 
+&lt;br/&gt;
+
 # Thank you! 
+
+&lt;br/&gt;
+
+&lt;h2 style="color:#5b85aa"&gt;Where can you find me?&lt;/h2&gt;
+
+Twitter: [@janithcwanni](https://twitter.com/janithcwanni)
+
+Github: [@janithwanni](https://github.com/janithwanni)
+
+Linkedin: [Janith Wanniarachchi](https://www.linkedin.com/in/janith-wanniarachchi-462851117/)
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "tango",
+"highlightStyle": "github",
 "highlightLines": true,
 "countIncrementalSlides": false
 });
