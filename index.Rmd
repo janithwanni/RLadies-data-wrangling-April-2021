@@ -369,7 +369,7 @@ Your supervisor replied back telling you to use the function `as.Date` to make t
 
 <h2>What is this <span class="remark-inline-code" style="font-size:32pt">lubridate</span>?</h2>
 
-`TODO add things here`
+lubridate is a package that helps in analysing and extracting useful information from dates, like the year, month, day or even difference between dates in different units!
 
 .center[<img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/lubridate_ymd.png" style="width:50%"/>]
 
@@ -412,7 +412,7 @@ We need to modify the existing dataset that comes after the last step in the pip
 
 ## Let's mutate the dataset!
 
-We will first mutate the original dataset to check whether this works. 
+We will first mutate the original dataset to check whether this works. Remember you just have to give the name of the column you want the operation to happen on, and there's no need to have the dataset before that followed with a `$`
 
 ```{r,comment=NA}
 spotify %>% 
@@ -441,7 +441,7 @@ print(latest_year)
 
 The latest year is with us now! All we need to do now is to filter and get only the tracks that was released on a year that is equal to the latest year
 
-`TODO add description of filter`
+The `filter` function can be used to get a portion of a dataset that ticks the boxes of a set of one or more logical conditions. Just like with mutate you can reference columns as it is and check if the value is in a column and so on so on, basically any logical condition that gives out a logical vector is fitting.
 
 <br/>
 
@@ -537,9 +537,13 @@ So now we know what sort of outcome we expect at the end. Now the question remai
 We can use the `group_by` function in dplyr for this. But the `group_by` function can be tricky sometimes so you dig a bit deeper and get the following idea. 
 
 * `group_by` function literally groups rows with the same combination of values together
+* After grouping
 * any `mutate` function that is applied will apply within the group
 
 `TODO add group_by explanation here`
+
+.center[<img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/group_by_ungroup.png" style="width:50%" />]
+
 ---
 
 With that in your head you first write out the `group_by` command and decide to be adventurous and `mutate` a new column for each of the averages. 
