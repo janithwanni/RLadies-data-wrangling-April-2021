@@ -47,8 +47,9 @@ Runner's up in two datathons and finalist in two datathons.
 
 # What is this data *wrangling*?
 
-.center[<img src="images/data_wrangler.png" style="width:50%">]
-.footnote[Illustration from Hadley Wickham’s 2019 talk, The Joy of Functional Programming ]
+.center[<img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/dplyr_wrangling.png" style="width:40%">]
+
+.footnote[Illustration from  ]
 * Data wrangling is where we take a raw dataset and transform it into a format that fits for different tasks
 
 * Simply it's like meal prep where we get the data ready to make the main dish (in this case it could be a model or visualization)
@@ -366,7 +367,13 @@ Uh-oh, These are in a character format and you don't know how to get the year ou
 Ding! Ding!    
 Your supervisor replied back telling you to use the function `as.Date` to make the column into a date and then the `year` function from the `lubridate` package. 
 
-That was quite a lot to digest!
+<h2>What is this <span class="remark-inline-code" style="font-size:32pt">lubridate</span>?</h2>
+
+`TODO add things here`
+
+.center[<img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/lubridate_ymd.png" style="width:50%"/>]
+
+---
 
 You go through the documentation and Google online and land on a StackOverflow page to find out that this code works out to give you the years that you need. 
 
@@ -379,6 +386,9 @@ Before you send this out to your supervisor you want to make sure that the code 
 1. You create a vector of Dates from a vector of characters
 2. You get the year as a number from the `year` function in `lubridate`
 
+Sounds good!
+
+.center[<img src="https://media.tenor.com/images/356d20c65288742f2ba36e4514f156b3/tenor.gif" width="40%"/>]
 ---
 
 ## How do we modify the existing columns?
@@ -394,9 +404,7 @@ But you suddenly remember how your supervisor brings in changes suddenly, theref
 
 We need to modify the existing dataset that comes after the last step in the pipeline. We can use the mutate function for this.  The argument format goes along as `new_column_name = modification`. The modification should give out a vector that fits the number of rows in the dataset.
 
-<br/>
-
-.center[<img src="images/dplyr_mutate.png" style="width:85%"/>]
+.center[<img src="images/dplyr_mutate.png" style="width:95%"/>]
 ]
 
 .footnote[Image Credits goes to stats illustrations from [Allison Horst](https://github.com/allisonhorst/stats-illustrations)]
@@ -431,7 +439,13 @@ print(latest_year)
 
 ## How can we filter the songs that we want?
 
-.center[<img src="images/dplyr_filter_sm.png" style="width:70%"/>]
+The latest year is with us now! All we need to do now is to filter and get only the tracks that was released on a year that is equal to the latest year
+
+`TODO add description of filter`
+
+<br/>
+
+.center[<img src="images/dplyr_filter_sm.png" style="width:60%"/>]
 
 ---
 
@@ -439,7 +453,7 @@ Simple! we use the `filter` function to filter out the rows that we need. We hav
 
 ```{r,comment=NA}
 spotify_with_year %>% 
-  filter(release_year == 2019) %>% #<<
+  filter(release_year == (latest_year-1)) %>% #<<
   select(track_name,release_year) %>% 
   head(3)
 ```
@@ -525,6 +539,7 @@ We can use the `group_by` function in dplyr for this. But the `group_by` functio
 * `group_by` function literally groups rows with the same combination of values together
 * any `mutate` function that is applied will apply within the group
 
+`TODO add group_by explanation here`
 ---
 
 With that in your head you first write out the `group_by` command and decide to be adventurous and `mutate` a new column for each of the averages. 
