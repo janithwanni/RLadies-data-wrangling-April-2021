@@ -21,14 +21,11 @@ class: center, middle, inverse, title-slide
 &lt;h1 style="text-align:center;color:#363a59"&gt;Hi there&lt;/h1&gt;
 
 .pull-left[
-&lt;img src="images/profile_picture.jpg" style="
+.center[&lt;img src="images/profile_picture.jpg" style="
     height: auto;
     border-radius: 50%;
     border: 3px solid #414770;
-    width:55%;
-    position:relative;left:20%"/&gt;
-&lt;hr/&gt;
-&lt;br/&gt;
+    width:35%;"/&gt;] &lt;hr/&gt; &lt;br/&gt;
 .center[
 &lt;h2 style="color:#5b85aa"&gt; Janith Wanniarachchi   &lt;/h2&gt;
 &lt;br/&gt;
@@ -177,13 +174,26 @@ class: middle, center, title-only-slide
 
 # Task No. 1 (Spot the Cool Kids)
 
-* Your supervisor has asked you to show the top 5 popular tracks and their artists.
+.pull-left[
+* As a first piece of the user interface for the recommmendation system, your supervisor thought of starting off with the basics. 
 
-* That's quite a lot to do for the first task!
+* She has decided to put up a table showing the top 5 popular tracks and their artists. 
 
+* Your supervisor has asked you to make the table that goes out on the front page of the user interface.
+]
+
+.pull-right[
 * Let's break it down. 
 
-* First let's select the tracks and their artist names and how popular they are. That should work right?
+* First let's select the tracks and their artist names and how popular they are. 
+
+* Then we can think of a way to get the top five from that table someway. 
+
+* This should work right? right????
+
+.center[&lt;img src="https://i.pinimg.com/originals/6c/06/7f/6c067f95ccf0401be464131c4e4f6c32.jpg" style="width:60%"/&gt;]
+
+]
 
 ---
 
@@ -203,9 +213,13 @@ spotify %&gt;%
   + For example if we want to select columnA from tibble t we would say `select(t,A)`. Likewise if we want to select everything except column B from tibble t we would say `select(t,-B)`.
   + you can even use a set of functions called tidy selectors to select columns based on how the name starts or ends, (For example `select(t,starts_with("LKR_"))`)
   
+Right now you know how to select the top rows of a tibble with the head function, so if you can get the tracks arranged by their popularity in ascending order then everything's all set!
+  
 ---
 
-Right now you know how to select the top rows of a tibble with the head function, so if you can get the tracks arranged by their popularity in ascending order then everything's all set!
+# Order! in the dataset
+
+We need a function that can sort the rows based on one or more columns.
 
 This is where the `arrange` function comes to play. The `arrange` function takes up a tibble as the first input and a set of columns to order by increasing or decreasing order. 
 
@@ -413,10 +427,28 @@ Before you send this out to your supervisor you want to make sure that the code 
 
 ## How do we modify the existing columns?
 
-We have to mutate the column just like the Covid19 virus is mutating by modifying the existing traits. The format goes along as new_column_name = modification. The modification should give out a vector that fits the number of rows in the dataset
+.pull-left[We have a way to get an entire vector of data based on the pre existing column in the dataset. 
 
-.center[&lt;img src="images/dplyr_mutate.png" style="width:50%"/&gt;]
+Now how do we add a new column to a dataset? We could simply do this, `dataset$new_column = vector_of_data`.
+
+But you suddenly remember how your supervisor brings in changes suddenly, therefore instead of making a break in the pipe in the middle, you try to find alternatives that can fit into the `%` operator pipeline.
+]
+
+.pull-right[ 
+
+We need to modify the existing dataset that comes after the last step in the pipeline. We can use the mutate function for this.  The argument format goes along as `new_column_name = modification`. The modification should give out a vector that fits the number of rows in the dataset.
+
+&lt;br/&gt;
+
+.center[&lt;img src="images/dplyr_mutate.png" style="width:85%"/&gt;]
+]
+
+.footnote[Image Credits goes to stats illustrations from [Allison Horst](https://github.com/allisonhorst/stats-illustrations)]
 ---
+
+## Let's mutate the dataset!
+
+We will first mutate the original dataset to check whether this works. 
 
 
 ```r
@@ -433,6 +465,7 @@ spotify %&gt;%
 1         2019
 2         2019
 ```
+
 Success! We managed to get the years out. Now we need to get the maximum of these years.
 
 
@@ -440,6 +473,10 @@ Success! We managed to get the years out. Now we need to get the maximum of thes
 spotify_with_year &lt;- spotify %&gt;% 
   mutate(release_year = lubridate::year(as.Date(track_album_release_date)))
 latest_year &lt;- max(spotify_with_year$release_year,na.rm = TRUE)
+```
+
+```
+## [1] 2020
 ```
 
 ---
@@ -508,6 +545,8 @@ What did we learn from trying out Task No.2 ?
 * `filter` function helps to filter the rows based on a condition
 
 That was a huge leap from what we learned in Task No. 1! 
+
+.center[&lt;img src="https://en.meming.world/images/en/thumb/a/aa/Something_of_a_Scientist.jpg/600px-Something_of_a_Scientist.jpg" style="width:60%"/&gt;]
 ---
 
 class: center,middle, title-only-slide
@@ -527,8 +566,8 @@ This is going to be a tough one! You sit down and sketch out how the final datas
 
 |playlist_genre | avg_energy| avg_dance| avg_instu| avg_valen|
 |:--------------|----------:|---------:|---------:|---------:|
-|some name 1    |        0.6|       0.6|       0.7|       0.8|
-|some name 2    |        0.9|       0.1|       0.9|       0.8|
+|some name 1    |        0.0|       0.6|       0.4|       0.2|
+|some name 2    |        0.4|       0.1|       0.8|       0.7|
 
 So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together
 
@@ -605,20 +644,25 @@ What did we learn from trying out Task No. 3?
 
 Finally! We finished all three tasks! We are now well on our way to start analysing data that come our way.
 
-.center[&lt;img src="https://en.meming.world/images/en/thumb/a/aa/Something_of_a_Scientist.jpg/600px-Something_of_a_Scientist.jpg" style="width:60%"/&gt;]
+.center[&lt;img src="https://i.kym-cdn.com/entries/icons/original/000/028/021/work.jpg" style="width:70%"/&gt;]
+
 ---
 
-# Summary
-
-## What did we learn today?
+.pull-left[## What did we learn today?
 
 * Data wrangling is kind of like meal prep where you prepare your ingredients(the raw data) for the final dish(the model or visualization)
-* There are several functions in different packages such as `filter`,`mutate`,`select`,`arrange`,`group_by`,`summarize`,`distinct` from the `dplyr` package and even date functions from the lubridate package that help to wrangle data into the format we need.
 
-## Where to go from here?
+* There are several functions in different packages such as `filter`,`mutate`,`select`,
+`arrange`,`group_by`,`summarize`,
+`distinct` from the `dplyr` package and even date functions from the lubridate package that help to wrangle data into the format we need.]
+
+.pull-right[## Where to go from here?
 
 * Get the Spotify Developer Account and access the APIs to create a dataset that is upto date and matches your style. 
+
 * Create an R shiny dashboard that can show interactive graphs of all the artists and where they fall on different indexes which are based on how positive the song is and so on. 
+
+* Analyse #TidyTuesday datasets weekly and follow the R for Data Science Community on Twitter for more inspiration.]
 
 ---
 class: center, middle
