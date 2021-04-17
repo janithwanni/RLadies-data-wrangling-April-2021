@@ -534,18 +534,35 @@ So now we know what sort of outcome we expect at the end. Now the question remai
 
 ## Understanding group_by
 
-We can use the `group_by` function in dplyr for this. But the `group_by` function can be tricky sometimes so you dig a bit deeper and get the following idea. 
+We can use the `group_by` function in dplyr for this. But the `group_by` function can be tricky sometimes so you dig a bit deeper. 
 
-* `group_by` function literally groups rows with the same combination of values together
-* After grouping
-* any `mutate` function that is applied will apply within the group
-
-`TODO add group_by explanation here`
+* `group_by` function literally groups rows with the same combination of values in the given columns together
+* After that any `mutate` function that is applied will apply within the group.
+* But remember to ungroup the dataset afterwards, otherwise they would remain in the grouped state and all the actions that you perform on it will be performed group wise.
 
 .center[<img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/group_by_ungroup.png" style="width:50%" />]
 
 ---
 
+## Testing out the waters
+
+```{r,echo=FALSE,eval=TRUE}
+mean_pop_energy <- spotify[spotify$playlist_genre == "pop",]$energy %>% mean()
+```
+
+Let's try seeing how this group_by works by trying to get the average metric of a known genre like pop. You type out the values by hand and get the mean value as `r mean_pop_energy`
+
+```{r}
+spotify %>% 
+  group_by(playlist_genre) %>% 
+  mutate(mean_energy = mean(energy)) %>% 
+  select(playlist_genre,mean_energy) %>% 
+  head(3)
+```
+
+So we have to call `distinct` for this as well it seems. And the tibble output shows that the dataset is now a grouped dataset by `playlist_genre`. We should add an ungroup at the end to remove that effect, otherwise we might forget and issues may come up.
+
+---
 With that in your head you first write out the `group_by` command and decide to be adventurous and `mutate` a new column for each of the averages. 
 
 ```{r,comment=NA,echo=TRUE,eval=FALSE}
@@ -556,6 +573,7 @@ spotify %>%
   rename(Genre = playlist_genre,Energetic = avg_energy, Dance = avg_dance,
          Instrumentals = avg_instu, Upbeat = avg_valen) %>% 
   select(Genre,Energetic,Dance,Instrumentals, Upbeat) %>% 
+  distinct() %>% 
   head(4) 
 ```
 ```{r,comment=NA,echo=FALSE,eval=TRUE}
@@ -566,16 +584,17 @@ spotify %>%
   rename(Genre = playlist_genre,Energetic = avg_energy, Dance = avg_dance,
          Instrumentals = avg_instu, Upbeat = avg_valen) %>% 
   select(Genre,Energetic,Dance,Instrumentals, Upbeat) %>% 
+  distinct() %>% 
   head(4) %>% knitr::kable()
 ```
 
-Wait that doesn't look right, We need only one row per genre. Do we have to call distinct again? Or is there an easier way than having to `mutate` -> `select` -> `distinct`?
+Do we really have to call distinct again like this? Or is there an easier way than having to `group_by` -> `mutate` -> `select` -> `distinct`?
 
 ---
 
 ## Task No. 3 is over!
 
-Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function `summarize` to make the code more readable and safer. 
+Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function `summarize` to make the code more readable and safer. And it automatically ungroups the outermost group after giving the summary statistics. 
 
 And now after digging on the `summarize` function, you realize that by simply replacing mutate with summarize your code now looks like this.
 

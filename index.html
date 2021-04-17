@@ -580,8 +580,8 @@ This is going to be a tough one! You sit down and sketch out how the final datas
 
 |playlist_genre | avg_energy| avg_dance| avg_instu| avg_valen|
 |:--------------|----------:|---------:|---------:|---------:|
-|some name 1    |        0.8|       0.2|       0.5|       0.0|
-|some name 2    |        0.4|       0.7|       0.6|       0.3|
+|some name 1    |        0.9|       0.9|       0.9|       1.0|
+|some name 2    |        0.2|       0.7|       0.2|       0.2|
 
 So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together
 
@@ -589,18 +589,44 @@ So now we know what sort of outcome we expect at the end. Now the question remai
 
 ## Understanding group_by
 
-We can use the `group_by` function in dplyr for this. But the `group_by` function can be tricky sometimes so you dig a bit deeper and get the following idea. 
+We can use the `group_by` function in dplyr for this. But the `group_by` function can be tricky sometimes so you dig a bit deeper. 
 
-* `group_by` function literally groups rows with the same combination of values together
-* After grouping
-* any `mutate` function that is applied will apply within the group
-
-`TODO add group_by explanation here`
+* `group_by` function literally groups rows with the same combination of values in the given columns together
+* After that any `mutate` function that is applied will apply within the group.
+* But remember to ungroup the dataset afterwards, otherwise they would remain in the grouped state and all the actions that you perform on it will be performed group wise.
 
 .center[&lt;img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/group_by_ungroup.png" style="width:50%" /&gt;]
 
 ---
 
+## Testing out the waters
+
+
+
+Let's try seeing how this group_by works by trying to get the average metric of a known genre like pop. You type out the values by hand and get the mean value as 0.7010278
+
+
+```r
+spotify %&gt;% 
+  group_by(playlist_genre) %&gt;% 
+  mutate(mean_energy = mean(energy)) %&gt;% 
+  select(playlist_genre,mean_energy) %&gt;% 
+  head(3)
+```
+
+```
+## # A tibble: 3 x 2
+## # Groups:   playlist_genre [1]
+##   playlist_genre mean_energy
+##   &lt;chr&gt;                &lt;dbl&gt;
+## 1 pop                  0.701
+## 2 pop                  0.701
+## 3 pop                  0.701
+```
+
+So we have to call `distinct` for this as well it seems. And the tibble output shows that the dataset is now a grouped dataset by `playlist_genre`. We should add an ungroup at the end to remove that effect, otherwise we might forget and issues may come up.
+
+---
 With that in your head you first write out the `group_by` command and decide to be adventurous and `mutate` a new column for each of the averages. 
 
 
@@ -612,23 +638,24 @@ spotify %&gt;%
   rename(Genre = playlist_genre,Energetic = avg_energy, Dance = avg_dance,
          Instrumentals = avg_instu, Upbeat = avg_valen) %&gt;% 
   select(Genre,Energetic,Dance,Instrumentals, Upbeat) %&gt;% 
+  distinct() %&gt;% 
   head(4) 
 ```
 
-|Genre | Energetic|     Dance| Instrumentals|   Upbeat|
-|:-----|---------:|---------:|-------------:|--------:|
-|pop   | 0.7010278| 0.6393017|     0.0598763| 0.503521|
-|pop   | 0.7010278| 0.6393017|     0.0598763| 0.503521|
-|pop   | 0.7010278| 0.6393017|     0.0598763| 0.503521|
-|pop   | 0.7010278| 0.6393017|     0.0598763| 0.503521|
+|Genre | Energetic|     Dance| Instrumentals|    Upbeat|
+|:-----|---------:|---------:|-------------:|---------:|
+|pop   | 0.7010278| 0.6393017|     0.0598763| 0.5035210|
+|rap   | 0.6507084| 0.7183528|     0.0759972| 0.5050900|
+|rock  | 0.7328133| 0.5205480|     0.0624173| 0.5373521|
+|latin | 0.7083125| 0.7132873|     0.0444470| 0.6055104|
 
-Wait that doesn't look right, We need only one row per genre. Do we have to call distinct again? Or is there an easier way than having to `mutate` -&gt; `select` -&gt; `distinct`?
+Do we really have to call distinct again like this? Or is there an easier way than having to `group_by` -&gt; `mutate` -&gt; `select` -&gt; `distinct`?
 
 ---
 
 ## Task No. 3 is over!
 
-Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function `summarize` to make the code more readable and safer. 
+Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function `summarize` to make the code more readable and safer. And it automatically ungroups the outermost group after giving the summary statistics. 
 
 And now after digging on the `summarize` function, you realize that by simply replacing mutate with summarize your code now looks like this.
 
