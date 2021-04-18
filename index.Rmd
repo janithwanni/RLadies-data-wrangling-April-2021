@@ -36,7 +36,7 @@ Data Wrangling with R
     height: auto;
     border-radius: 50%;
     border: 3px solid #414770;
-    width:35%;"/>] <hr/> <br/>
+    width:45%;"/>] <hr/> <br/>
 .center[
 <h2 style="color:#5b85aa"> Janith Wanniarachchi   </h2>
 <br/>
@@ -50,15 +50,15 @@ Data Wrangling with R
 
 .pull-right[
 
-<h2> My adventures with R</h2>
-
 Co-author of two R packages maintained by Dr. Thiyanga Thalagala, [DSJobTracker](https://github.com/thiyangt/DSjobtracker) and [tsdataleaks](https://github.com/thiyangt/tsdataleaks). 
 
 .center[<img src="https://github.com/thiyangt/DSjobtracker/raw/master/hexsticker/figures/hexsticker.png" style="width: 30%"> <img src="https://github.com/thiyangt/ThiTal/raw/master/static/Slides/isf2020/hexsticker.png" style="width: 30%">]
 
 Runner's up in two datathons and finalist in two datathons.
 
+<br/>
 
+<img src="images/2019_hacktoberfest.jpg" style="width:50%;transform: rotate(-40deg);" /><img src="images/2020_hacktoberfest.jpg" style="width:50%;transform: rotate(40deg);" />
 
 ]
 ---
