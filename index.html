@@ -56,7 +56,7 @@ Runner's up in two datathons and finalist in two datathons.
 
 .center[&lt;img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/dplyr_wrangling.png" style="width:40%"&gt;]
 
-.footnote[Illustration from  ]
+.footnote[Image Credits goes to stats illustrations from [Allison Horst](https://github.com/allisonhorst/stats-illustrations)]
 * Data wrangling is where we take a raw dataset and transform it into a format that fits for different tasks
 
 * Simply it's like meal prep where we get the data ready to make the main dish (in this case it could be a model or visualization)
@@ -145,13 +145,13 @@ class: middle, center
 # What are all these numbers?
 
 
-* The entire data dictionary was found [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md#spotify_songscsv) and you manage to jot it down as follows
+* The entire data dictionary was found [here](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md#spotify_songscsv) and you manage to jot it down as follows.
 
-* We have the id,genre and subgenre of each playlist 
+* We have the id,genre and subgenre of each playlist.
 
-* the id,name and release date of each album 
+* The id,name and release date of each album.
 
-* finally id,name,artist and popularity of each track. 
+* Finally id,name,artist and popularity of each track. 
 
 * In addition we have the following features of songs.
   + danceability : is it suitable for dancing (range: [0,1])
@@ -176,7 +176,7 @@ class: middle, center, title-only-slide
 # Task No. 1 (Spot the Cool Kids)
 
 .pull-left[
-* As a first piece of the user interface for the recommmendation system, your supervisor thought of starting off with the basics. 
+* As the first piece of the user interface for the recommmendation system, your supervisor thought of starting off with the basics. 
 
 * She has decided to put up a table showing the top 5 popular tracks and their artists. 
 
@@ -209,7 +209,7 @@ spotify %&gt;%
 * The `select` command helps us select columns that we want, and we can give a range of columns or even the columns that we don't want to have.
 
 * The `select` function works as follows. 
-  + The first argument is the tibble or data frame, in this case we have piped using the pipe operator
+  + The first argument is the tibble or data frame, in this case we have piped the spotify dataset using the pipe operator.
   + The rest of the arguments are the different ways of selecting the variables. 
   + For example if we want to select columnA from tibble t we would say `select(t,A)`. Likewise if we want to select everything except column B from tibble t we would say `select(t,-B)`.
   + you can even use a set of functions called tidy selectors to select columns based on how the name starts or ends, (For example `select(t,starts_with("LKR_"))`)
@@ -382,7 +382,7 @@ class: center,middle, title-only-slide
 
 .pull-right[
 
-* First we need to make a new column indicating the year that the album was released in
+* First we need to make a new column indicating the year that the album was released in.
 
 
 ```r
@@ -415,6 +415,7 @@ Your supervisor replied back telling you to use the function `as.Date` to make t
 lubridate is a package that helps in analysing and extracting useful information from dates, like the year, month, day or even difference between dates in different units!
 
 .center[&lt;img src="https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/lubridate_ymd.png" style="width:50%"/&gt;]
+.footnote[Image Credits goes to stats illustrations from [Allison Horst](https://github.com/allisonhorst/stats-illustrations)]
 
 ---
 
@@ -491,13 +492,14 @@ latest_year &lt;- max(spotify_with_year$release_year,na.rm = TRUE)
 
 ## How can we filter the songs that we want?
 
-The latest year is with us now! All we need to do now is to filter and get only the tracks that was released on a year that is equal to the latest year
+The latest year is with us now! All we need to do now is to filter and get only the tracks that was released on a year that is equal to the latest year.
 
-The `filter` function can be used to get a portion of a dataset that ticks the boxes of a set of one or more logical conditions. Just like with mutate you can reference columns as it is and check if the value is in a column and so on so on, basically any logical condition that gives out a logical vector is fitting.
+The `filter` function can be used to get a portion of a dataset that ticks the boxes of a set of one or more logical conditions. Basically any logical condition that gives out a logical vector matching the length of the dataset can be used to filter out the rows that you need. 
 
-&lt;br/&gt;
+It's kind of like an actual filter where the barriers are the rows with `FALSE`.
 
-.center[&lt;img src="images/dplyr_filter_sm.png" style="width:60%"/&gt;]
+.center[&lt;img src="images/dplyr_filter_sm.png" style="width:50%"/&gt;]
+.footnote[Image Credits goes to stats illustrations from [Allison Horst](https://github.com/allisonhorst/stats-illustrations)]
 
 ---
 
@@ -508,16 +510,18 @@ Simple! we use the `filter` function to filter out the rows that we need. We hav
 spotify_with_year %&gt;% 
 * filter(release_year == (latest_year-1)) %&gt;%
   select(track_name,release_year) %&gt;% 
-  head(3)
+  head(5)
 ```
 
 ```
-# A tibble: 3 x 2
+# A tibble: 5 x 2
   track_name                                            release_year
   &lt;chr&gt;                                                        &lt;dbl&gt;
 1 I Don't Care (with Justin Bieber) - Loud Luxury Remix         2019
 2 Memories - Dillon Francis Remix                               2019
 3 All the Time - Don Diablo Remix                               2019
+4 Call You Mine - Keanu Silva Remix                             2019
+5 Someone You Loved - Future Humans Remix                       2019
 ```
 
 Great! Now we need to plug these into our previous code and we are good to go!
@@ -553,10 +557,10 @@ spotify_with_year %&gt;%
 
 What did we learn from trying out Task No.2 ?
 
-* `as.Date` function converts character columns to Date columns
-* `year` function from `lubridate` package gets the year from a Date column
-* `mutate` function mutates existing columns to create new ones
-* `filter` function helps to filter the rows based on a condition
+* `as.Date` function converts character columns to Date columns.
+* `year` function from `lubridate` package gets the year from a Date column.
+* `mutate` function mutates existing columns to create new ones.
+* `filter` function helps to filter the rows based on a condition.
 
 That was a huge leap from what we learned in Task No. 1! 
 
@@ -580,10 +584,10 @@ This is going to be a tough one! You sit down and sketch out how the final datas
 
 |playlist_genre | avg_energy| avg_dance| avg_instu| avg_valen|
 |:--------------|----------:|---------:|---------:|---------:|
-|some name 1    |        0.9|       0.9|       0.9|       1.0|
-|some name 2    |        0.2|       0.7|       0.2|       0.2|
+|some name 1    |        0.1|       0.2|       0.6|       0.9|
+|some name 2    |        0.5|       0.3|       0.1|       0.4|
 
-So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together
+So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together.
 
 ---
 
@@ -603,7 +607,7 @@ We can use the `group_by` function in dplyr for this. But the `group_by` functio
 
 
 
-Let's try seeing how this group_by works by trying to get the average metric of a known genre like pop. You type out the values by hand and get the mean value as 0.7010278
+Let's try seeing how this group_by works by trying to get the average metric of a known genre like pop. You type out the values by hand and get the mean value as 0.7010278.
 
 
 ```r
@@ -639,6 +643,7 @@ spotify %&gt;%
          Instrumentals = avg_instu, Upbeat = avg_valen) %&gt;% 
   select(Genre,Energetic,Dance,Instrumentals, Upbeat) %&gt;% 
   distinct() %&gt;% 
+  ungroup() %&gt;% 
   head(4) 
 ```
 
@@ -655,9 +660,9 @@ Do we really have to call distinct again like this? Or is there an easier way th
 
 ## Task No. 3 is over!
 
-Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function `summarize` to make the code more readable and safer. And it automatically ungroups the outermost group after giving the summary statistics. 
+Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function `summarize` to make the code more readable and safer. 
 
-And now after digging on the `summarize` function, you realize that by simply replacing mutate with summarize your code now looks like this.
+And now after digging on the `summarize` function, you realize that by simply replacing mutate with summarize your code now looks like this. And it automatically ungroups the outermost group after giving the summary statistics. 
 
 
 ```r
@@ -700,7 +705,7 @@ Finally! We finished all three tasks! We are now well on our way to start analys
 
 * There are several functions in different packages such as `filter`,`mutate`,`select`,
 `arrange`,`group_by`,`summarize`,
-`distinct` from the `dplyr` package and even date functions from the lubridate package that help to wrangle data into the format we need.]
+`distinct` from the `dplyr` package and even date functions from the `lubridate` package that help to wrangle data into the format we need.]
 
 .pull-right[## Where to go from here?
 
@@ -708,7 +713,7 @@ Finally! We finished all three tasks! We are now well on our way to start analys
 
 * Create an R shiny dashboard that can show interactive graphs of all the artists and where they fall on different indexes which are based on how positive the song is and so on. 
 
-* Analyse #TidyTuesday datasets weekly and follow the R for Data Science Community on Twitter for more inspiration.]
+* Analyse [#TidyTuesday](https://github.com/rfordatascience/tidytuesday/) datasets that come out weekly and follow the [R for Data Science Community](https://twitter.com/R4DScommunity) on Twitter for more inspiration.]
 
 ---
 class: center, middle

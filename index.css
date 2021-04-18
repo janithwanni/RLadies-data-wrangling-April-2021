@@ -37,7 +37,7 @@ a, a > code {
 }
 
 .remark-slide{
-  border-bottom: 10px solid #331832;
+  border-bottom: -10px solid #331832;
 }
 
 .title-only-slide{
