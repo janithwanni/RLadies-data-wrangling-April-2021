@@ -5,10 +5,28 @@ output:
   xaringan::moon_reader:
     css: [default, kunoichi,"index.css"]
     lib_dir: libs
+    seal: false
     nature:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+---
+class: center, middle, first-slide, inverse
+
+<span style="font-family: 'Playfair Display', serif; font-weight: 500; font-size: 54pt">
+Data Wrangling with R
+</span>
+
+<hr style="width:60%;margin: 0 auto;"/>
+
+<span style="font-family: 'Lato', sans-serif;font-size: 24pt;font-weight:400;">
+  R Ladies Colombo <br/> 
+  <span style="font-weight:300;font-size: 18pt;">April 2021 Meetup</span>
+</span>
+
+.center[<img src="images/bg4.png" style="position:fixed;bottom:0px;left:-0%"/>]
+
+
 ---
 
 <h1 style="text-align:center;color:#363a59">Hi there</h1>
