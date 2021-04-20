@@ -175,6 +175,8 @@ class: middle, center, title-only-slide
 .pull-right[
 * Let's break it down. 
 
+--
+
 * First let's select the tracks and their artist names and how popular they are. 
 
 * Then we can think of a way to get the top five from that table someway. 
@@ -210,7 +212,11 @@ Right now you know how to select the top rows of a tibble with the head function
 
 We need a function that can sort the rows based on one or more columns.
 
+--
+
 This is where the `arrange` function comes to play. The `arrange` function takes up a tibble as the first input and a set of columns to order by increasing or decreasing order. 
+
+--
 
 ```{r,eval=FALSE}
 spotify %>% 
@@ -227,11 +233,15 @@ spotify %>%
   knitr::kable()
 ```
 
+--
+
 Wait something's not right, this isn't in descending order! We have to tell the `arrange` function to sort them in descending order. 
 
 ---
 
 You can tell the `arrange` function to order in descending order by using a minus operator in front, somewhat similar to the `select` function. 
+
+--
 
 ```{r,eval=FALSE}
 spotify %>% 
@@ -248,9 +258,13 @@ spotify %>%
   knitr::kable()
 ```
 
+--
+
 Hold up, why is it repeating like that?    
 One track can be in multiple playlists! That's why! Now what do we do?
 Let's select only the distinct or unique rows.
+
+--
 
 For that we can use the `distinct` function. The `distinct` function takes in a tibble as the first argument and then a set of columns to find distinctive rows or uses all columns if no arguments are given. You can see the pattern here right?
 
@@ -297,15 +311,17 @@ She wants this to be more presentable on the user interface by renaming the colu
 
 Well we already know how to select columns that we don't need, but what about renaming columns?
 
-Based on your gut feeling you google up "rename tidyverse function" and land on the rename function to find out the following.
+]
 
-The `rename` function takes in pairs of arguments in the form of 
+--
 
-*new_name = old_name* 
-
-so we can rename the columns that we want with that function. 
-
-This is in addition to the first argument of a tibble to do all of these on. ]
+<div class="pull-right" style="clear:none"/>
+<p>Based on your gut feeling you google up "rename tidyverse function" and land on the rename function to find out the following.</p>
+<p>The <code class="remark-inline-code">rename</code> function takes in pairs of arguments in the form of </p>
+<p><em>new_name = old_name</em> </p>
+<p>so we can rename the columns that we want with that function. </p>
+<p>This is in addition to the first argument of a tibble to do all of these on. </p>
+</div>
 
 ---
 
@@ -374,6 +390,8 @@ spotify %>%
   head(2) 
 ```
 
+--
+
 Uh-oh, These are in a character format and you don't know how to get the year out of a character like this. Let's ask our supervisor on how to solve this. 
 
 ]
@@ -384,6 +402,8 @@ Uh-oh, These are in a character format and you don't know how to get the year ou
 
 Ding! Ding!    
 Your supervisor replied back telling you to use the function `as.Date` to make the column into a date and then the `year` function from the `lubridate` package. 
+
+--
 
 <h2>What is this <span class="remark-inline-code" style="font-size:32pt">lubridate</span>?</h2>
 
@@ -419,9 +439,11 @@ Now how do we add a new column to a dataset? We could simply do this, `dataset$n
 But you suddenly remember how your supervisor brings in changes suddenly, therefore instead of making a break in the pipe in the middle, you try to find alternatives that can fit into the `%` operator pipeline.
 ]
 
+--
+
 .pull-right[ 
 
-We need to modify the existing dataset that comes after the last step in the pipeline. We can use the mutate function for this.  The argument format goes along as `new_column_name = modification`. The modification should give out a vector that fits the number of rows in the dataset.
+We need to modify the existing dataset that comes after the last step in the pipeline. We can use the `mutate` function for this.  The argument format goes along as `new_column_name = modification`. The modification should give out a vector that fits the number of rows in the dataset.
 
 .center[<img src="images/dplyr_mutate.png" style="width:95%"/>]
 ]
@@ -460,6 +482,8 @@ print(latest_year)
 
 The latest year is with us now! All we need to do now is to filter and get only the tracks that was released on a year that is equal to the latest year.
 
+--
+
 The `filter` function can be used to get a portion of a dataset that ticks the boxes of a set of one or more logical conditions. Basically any logical condition that gives out a logical vector matching the length of the dataset can be used to filter out the rows that you need. 
 
 It's kind of like an actual filter where the barriers are the rows with `FALSE`.
@@ -469,7 +493,7 @@ It's kind of like an actual filter where the barriers are the rows with `FALSE`.
 
 ---
 
-Simple! we use the `filter` function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &,|, ~ etc. 
+Let's use the `filter` function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &,|, ~ etc. 
 
 ```{r,comment=NA}
 spotify_with_year %>% 
