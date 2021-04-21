@@ -174,18 +174,22 @@ class: middle, center, title-only-slide
 
 .pull-right[
 * Let's break it down. 
-
---
-
-* First let's select the tracks and their artist names and how popular they are. 
-
-* Then we can think of a way to get the top five from that table someway. 
-
-* This should work right? right????
-
-.center[<img src="https://i.pinimg.com/originals/6c/06/7f/6c067f95ccf0401be464131c4e4f6c32.jpg" style="width:60%"/>]
-
 ]
+--
+<div class="pull-right" style="clear:none">
+<ul>
+<li>First let's select the tracks and their artist names and how popular they are. </li>
+
+<li>Then we can think of a way to get the top five from that table someway. </li>
+
+<li>This should work right? right????</li>
+
+</ul>
+<span class="center">
+<img src="https://i.pinimg.com/originals/6c/06/7f/6c067f95ccf0401be464131c4e4f6c32.jpg" style="width:60%"/>
+</span>
+
+</div>
 
 ---
 
@@ -389,12 +393,11 @@ spotify %>%
   select(track_album_release_date) %>% 
   head(2) 
 ```
+]
 
 --
 
-Uh-oh, These are in a character format and you don't know how to get the year out of a character like this. Let's ask our supervisor on how to solve this. 
-
-]
+<div class="pull-right" style="clear:none"> Uh-oh, These are in a character format and you don't know how to get the year out of a character like this. Let's ask our supervisor on how to solve this. </div>
 
 ---
 
@@ -416,9 +419,13 @@ lubridate is a package that helps in analysing and extracting useful information
 
 You go through the documentation and Google online and land on a StackOverflow page to find out that this code works out to give you the years that you need. 
 
+--
+
 ```{r,eval=FALSE}
 as.Date(spotify$track_album_release_date) %>% lubridate::year() #<<
 ```
+
+--
 
 Before you send this out to your supervisor you want to make sure that the code that you wrote is correct, so you start matching with the documentation to get a rough idea about what happens. 
 
@@ -455,6 +462,8 @@ We need to modify the existing dataset that comes after the last step in the pip
 
 We will first mutate the original dataset to check whether this works. Remember you just have to give the name of the column you want the operation to happen on, and there's no need to have the dataset before that followed with a `$`
 
+--
+
 ```{r,comment=NA}
 spotify %>% 
   mutate(release_year = lubridate::year(as.Date(track_album_release_date))) %>% #<<
@@ -463,6 +472,8 @@ spotify %>%
 ```
 
 Success! We managed to get the years out. Now we need to get the maximum of these years.
+
+--
 
 ```{r,eval=FALSE}
 spotify_with_year <- spotify %>% 
@@ -494,6 +505,8 @@ It's kind of like an actual filter where the barriers are the rows with `FALSE`.
 ---
 
 Let's use the `filter` function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &,|, ~ etc. 
+
+--
 
 ```{r,comment=NA}
 spotify_with_year %>% 
@@ -596,6 +609,8 @@ mean_pop_energy <- spotify[spotify$playlist_genre == "pop",]$energy %>% mean()
 
 Let's try seeing how this group_by works by trying to get the average metric of a known genre like pop. You type out the values by hand and get the mean value as `r mean_pop_energy`.
 
+--
+
 ```{r}
 spotify %>% 
   group_by(playlist_genre) %>% 
@@ -604,10 +619,15 @@ spotify %>%
   head(3)
 ```
 
+--
+
 So we have to call `distinct` for this as well it seems. And the tibble output shows that the dataset is now a grouped dataset by `playlist_genre`. We should add an ungroup at the end to remove that effect, otherwise we might forget and issues may come up.
 
 ---
+
 With that in your head you first write out the `group_by` command and decide to be adventurous and `mutate` a new column for each of the averages. 
+
+--
 
 ```{r,comment=NA,echo=TRUE,eval=FALSE}
 spotify %>% 
@@ -634,6 +654,8 @@ spotify %>%
   head(4) %>% knitr::kable()
 ```
 
+--
+
 Do we really have to call distinct again like this? Or is there an easier way than having to `group_by` -> `mutate` -> `select` -> `distinct`?
 
 ---
@@ -643,6 +665,8 @@ Do we really have to call distinct again like this? Or is there an easier way th
 Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function `summarize` to make the code more readable and safer. 
 
 And now after digging on the `summarize` function, you realize that by simply replacing mutate with summarize your code now looks like this. And it automatically ungroups the outermost group after giving the summary statistics. 
+
+--
 
 ```{r,echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE}
 spotify %>% 
@@ -688,6 +712,8 @@ Finally! We finished all three tasks! We are now well on our way to start analys
 `arrange`,`group_by`,`summarize`,
 `distinct` from the `dplyr` package and even date functions from the `lubridate` package that help to wrangle data into the format we need.]
 
+--
+
 .pull-right[## Where to go from here?
 
 * Get the Spotify Developer Account and access the APIs to create a dataset that is upto date and matches your style. 
@@ -706,6 +732,8 @@ class: center, middle
 <br/>
 
 <h2 style="color:#5b85aa">Where can you find me?</h2>
+
+Email: [janithcwanni@gmail.com](#)
 
 Twitter: [@janithcwanni](https://twitter.com/janithcwanni)
 

@@ -196,18 +196,22 @@ class: middle, center, title-only-slide
 
 .pull-right[
 * Let's break it down. 
-
---
-
-* First let's select the tracks and their artist names and how popular they are. 
-
-* Then we can think of a way to get the top five from that table someway. 
-
-* This should work right? right????
-
-.center[&lt;img src="https://i.pinimg.com/originals/6c/06/7f/6c067f95ccf0401be464131c4e4f6c32.jpg" style="width:60%"/&gt;]
-
 ]
+--
+&lt;div class="pull-right" style="clear:none"&gt;
+&lt;ul&gt;
+&lt;li&gt;First let's select the tracks and their artist names and how popular they are. &lt;/li&gt;
+
+&lt;li&gt;Then we can think of a way to get the top five from that table someway. &lt;/li&gt;
+
+&lt;li&gt;This should work right? right????&lt;/li&gt;
+
+&lt;/ul&gt;
+&lt;span class="center"&gt;
+&lt;img src="https://i.pinimg.com/originals/6c/06/7f/6c067f95ccf0401be464131c4e4f6c32.jpg" style="width:60%"/&gt;
+&lt;/span&gt;
+
+&lt;/div&gt;
 
 ---
 
@@ -425,12 +429,11 @@ spotify %&gt;%
 1 2019-06-14              
 2 2019-12-13              
 ```
+]
 
 --
 
-Uh-oh, These are in a character format and you don't know how to get the year out of a character like this. Let's ask our supervisor on how to solve this. 
-
-]
+&lt;div class="pull-right" style="clear:none"&gt; Uh-oh, These are in a character format and you don't know how to get the year out of a character like this. Let's ask our supervisor on how to solve this. &lt;/div&gt;
 
 ---
 
@@ -452,10 +455,14 @@ lubridate is a package that helps in analysing and extracting useful information
 
 You go through the documentation and Google online and land on a StackOverflow page to find out that this code works out to give you the years that you need. 
 
+--
+
 
 ```r
 *as.Date(spotify$track_album_release_date) %&gt;% lubridate::year()
 ```
+
+--
 
 Before you send this out to your supervisor you want to make sure that the code that you wrote is correct, so you start matching with the documentation to get a rough idea about what happens. 
 
@@ -492,6 +499,8 @@ We need to modify the existing dataset that comes after the last step in the pip
 
 We will first mutate the original dataset to check whether this works. Remember you just have to give the name of the column you want the operation to happen on, and there's no need to have the dataset before that followed with a `$`
 
+--
+
 
 ```r
 spotify %&gt;% 
@@ -509,6 +518,8 @@ spotify %&gt;%
 ```
 
 Success! We managed to get the years out. Now we need to get the maximum of these years.
+
+--
 
 
 ```r
@@ -539,6 +550,8 @@ It's kind of like an actual filter where the barriers are the rows with `FALSE`.
 ---
 
 Let's use the `filter` function to filter out the rows that we need. We have to a logical condition as an argument to filter and you can combine different conditions using logical operators like &amp;,|, ~ etc. 
+
+--
 
 
 ```r
@@ -619,8 +632,8 @@ This is going to be a tough one! You sit down and sketch out how the final datas
 
 |playlist_genre | avg_energy| avg_dance| avg_instu| avg_valen|
 |:--------------|----------:|---------:|---------:|---------:|
-|some name 1    |        0.2|       0.1|       0.5|       0.2|
-|some name 2    |        0.8|       0.5|       0.8|       0.3|
+|some name 1    |        0.4|       0.1|       0.9|       0.8|
+|some name 2    |        0.8|       0.3|       0.2|       0.5|
 
 So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together.
 
@@ -644,6 +657,8 @@ We can use the `group_by` function in dplyr for this. But the `group_by` functio
 
 Let's try seeing how this group_by works by trying to get the average metric of a known genre like pop. You type out the values by hand and get the mean value as 0.7010278.
 
+--
+
 
 ```r
 spotify %&gt;% 
@@ -663,10 +678,15 @@ spotify %&gt;%
 ## 3 pop                  0.701
 ```
 
+--
+
 So we have to call `distinct` for this as well it seems. And the tibble output shows that the dataset is now a grouped dataset by `playlist_genre`. We should add an ungroup at the end to remove that effect, otherwise we might forget and issues may come up.
 
 ---
+
 With that in your head you first write out the `group_by` command and decide to be adventurous and `mutate` a new column for each of the averages. 
+
+--
 
 
 ```r
@@ -689,6 +709,8 @@ spotify %&gt;%
 |rock  | 0.7328133| 0.5205480|     0.0624173| 0.5373521|
 |latin | 0.7083125| 0.7132873|     0.0444470| 0.6055104|
 
+--
+
 Do we really have to call distinct again like this? Or is there an easier way than having to `group_by` -&gt; `mutate` -&gt; `select` -&gt; `distinct`?
 
 ---
@@ -698,6 +720,8 @@ Do we really have to call distinct again like this? Or is there an easier way th
 Your supervisor noticed what you were typing on your laptop and gave a tip to Google up on the function `summarize` to make the code more readable and safer. 
 
 And now after digging on the `summarize` function, you realize that by simply replacing mutate with summarize your code now looks like this. And it automatically ungroups the outermost group after giving the summary statistics. 
+
+--
 
 
 ```r
@@ -742,6 +766,8 @@ Finally! We finished all three tasks! We are now well on our way to start analys
 `arrange`,`group_by`,`summarize`,
 `distinct` from the `dplyr` package and even date functions from the `lubridate` package that help to wrangle data into the format we need.]
 
+--
+
 .pull-right[## Where to go from here?
 
 * Get the Spotify Developer Account and access the APIs to create a dataset that is upto date and matches your style. 
@@ -760,6 +786,8 @@ class: center, middle
 &lt;br/&gt;
 
 &lt;h2 style="color:#5b85aa"&gt;Where can you find me?&lt;/h2&gt;
+
+Email: [janithcwanni@gmail.com](#)
 
 Twitter: [@janithcwanni](https://twitter.com/janithcwanni)
 
