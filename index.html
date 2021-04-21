@@ -367,8 +367,7 @@ spotify %&gt;%
   distinct() %&gt;% 
   head(5) %&gt;% 
   select(-track_popularity) %&gt;% 
-* rename(Song = track_name, Artist = track_artist) %&gt;%
-  knitr::kable()
+* rename(Song = track_name, Artist = track_artist)
 ```
 
 
@@ -625,15 +624,15 @@ class: center,middle, title-only-slide
 
 The supervisor has one final task for you.   
 
-You need to give the average scores for energy, danceability, instrumentalness, valence for each playlist to so that the supervisor can plus that dataset into her Plotly Radar plot function. 
+You need to give the average scores for energy, danceability, instrumentalness, valence for each playlist to so that the supervisor can use that dataset in her Plotly Radar plot function. 
 
 This is going to be a tough one! You sit down and sketch out how the final dataset should look like and this is what you got, 
 
 
 |playlist_genre | avg_energy| avg_dance| avg_instu| avg_valen|
 |:--------------|----------:|---------:|---------:|---------:|
-|some name 1    |        0.4|       0.1|       0.9|       0.8|
-|some name 2    |        0.8|       0.3|       0.2|       0.5|
+|some name 1    |        0.8|       0.2|       0.7|       0.2|
+|some name 2    |        0.3|       0.8|       0.8|       0.8|
 
 So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together.
 
@@ -655,7 +654,7 @@ We can use the `group_by` function in dplyr for this. But the `group_by` functio
 
 
 
-Let's try seeing how this group_by works by trying to get the average metric of a known genre like pop. You type out the values by hand and get the mean value as 0.7010278.
+Let's try seeing how this group_by works by trying to get the average energy of a genre like pop. You type out the values by hand and get the mean value as 0.7010278.
 
 --
 

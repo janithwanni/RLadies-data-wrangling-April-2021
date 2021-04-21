@@ -338,8 +338,7 @@ spotify %>%
   distinct() %>% 
   head(5) %>% 
   select(-track_popularity) %>% 
-  rename(Song = track_name, Artist = track_artist) %>% #<<
-  knitr::kable()
+  rename(Song = track_name, Artist = track_artist) #<<
 ```
 
 ```{r,echo=FALSE,eval=TRUE}
@@ -570,7 +569,7 @@ class: center,middle, title-only-slide
 
 The supervisor has one final task for you.   
 
-You need to give the average scores for energy, danceability, instrumentalness, valence for each playlist to so that the supervisor can plus that dataset into her Plotly Radar plot function. 
+You need to give the average scores for energy, danceability, instrumentalness, valence for each playlist to so that the supervisor can use that dataset in her Plotly Radar plot function. 
 
 This is going to be a tough one! You sit down and sketch out how the final dataset should look like and this is what you got, 
 
@@ -607,7 +606,7 @@ We can use the `group_by` function in dplyr for this. But the `group_by` functio
 mean_pop_energy <- spotify[spotify$playlist_genre == "pop",]$energy %>% mean()
 ```
 
-Let's try seeing how this group_by works by trying to get the average metric of a known genre like pop. You type out the values by hand and get the mean value as `r mean_pop_energy`.
+Let's try seeing how this group_by works by trying to get the average energy of a genre like pop. You type out the values by hand and get the mean value as `r mean_pop_energy`.
 
 --
 
