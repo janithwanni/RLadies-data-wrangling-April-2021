@@ -217,6 +217,8 @@ class: middle, center, title-only-slide
 
 ## How do we *select* column names?
 
+--
+
 
 ```r
 spotify %&gt;% 
@@ -311,8 +313,7 @@ spotify %&gt;%
   select(track_name,track_artist,track_popularity) %&gt;% 
   arrange(-track_popularity) %&gt;% 
 * distinct() %&gt;%
-  head(5) %&gt;% 
-  knitr::kable()
+  head(5)
 ```
 
 
@@ -631,8 +632,8 @@ This is going to be a tough one! You sit down and sketch out how the final datas
 
 |playlist_genre | avg_energy| avg_dance| avg_instu| avg_valen|
 |:--------------|----------:|---------:|---------:|---------:|
-|some name 1    |        0.8|       0.2|       0.7|       0.2|
-|some name 2    |        0.3|       0.8|       0.8|       0.8|
+|some name 1    |        0.9|       0.3|       0.2|       0.4|
+|some name 2    |        0.9|       0.7|       0.2|       0.6|
 
 So now we know what sort of outcome we expect at the end. Now the question remains how do you group these playlists together.
 

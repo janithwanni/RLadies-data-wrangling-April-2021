@@ -195,6 +195,8 @@ class: middle, center, title-only-slide
 
 ## How do we *select* column names?
 
+--
+
 ```{r,eval=FALSE}
 spotify %>% 
   select(track_name,track_artist,track_popularity) #<<
@@ -283,8 +285,7 @@ spotify %>%
   select(track_name,track_artist,track_popularity) %>% 
   arrange(-track_popularity) %>% 
   distinct() %>% #<<
-  head(5) %>% 
-  knitr::kable()
+  head(5)
 ```
 
 ```{r,echo=FALSE,eval=TRUE}
